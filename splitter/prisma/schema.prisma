@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,96 +7,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model user{
-  id String @id @default(uuid())
-  clerkId String
-  name String 
-  email String @unique
-
-  groups groupmembers[]
+model user {
+  id       String         @id @default(uuid())
+  name     String
+  email    String         @unique
+  clerkId  String         @unique
   expenses expenses[]
-  splits splits[]
+  groups   groupmembers[]
+  received payments[]     @relation("receiver")
+  sent     payments[]     @relation("sender")
+  splits   splits[]
 
-  received payments[] @relation("receiver")
-  sent payments[] @relation("sender")
-
-  @@index([email]) 
+  @@index([email])
   @@index([clerkId])
 }
 
-model group{
-  id String @id @default(uuid())
-  name String
-  createdAt DateTime @default(now())
-
-  members groupmembers[]
-  expenses expenses[]
-  payments payments[]
+model group {
+  id        String         @id @default(uuid())
+  name      String
+  createdAt DateTime       @default(now())
+  expenses  expenses[]
+  members   groupmembers[]
+  payments  payments[]
 }
 
-
-model groupmembers{
-  id String @id @default(uuid())
+model groupmembers {
+  id       String   @id @default(uuid())
   joinedAt DateTime @default(now())
+  userId   String
+  groupId  String
+  group    group    @relation(fields: [groupId], references: [id])
+  user     user     @relation(fields: [userId], references: [id])
 
-  userId String
-  groupId String
- 
-  user user @relation(fields: [userId],references:[id])
-  group group@relation(fields: [groupId],references:[id])
-  
   @@index([userId])
   @@index([groupId])
 }
 
-model expenses{
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  amount Float
+model expenses {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  amount      Float
   description String
+  paidBy      String
+  groupId     String
+  group       group    @relation(fields: [groupId], references: [id])
+  paid        user     @relation(fields: [paidBy], references: [id])
+  splits      splits[]
 
-  paidBy String
-  paid user @relation(fields: [paidBy],references: [id])
-
-  groupId String
-  group group @relation(fields: [groupId],references: [id])
-
-  splits splits[]
   @@index([paidBy])
   @@index([groupId])
 }
 
-model splits{
-
-  id String @id @default(uuid())
+model splits {
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  amount Float
-
+  amount    Float
   expenseId String
-  userId String
-
-  expense expenses @relation(fields: [expenseId],references: [id])
-  user user @relation(fields: [userId],references: [id])
+  userId    String
+  expense   expenses @relation(fields: [expenseId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
 
   @@index([expenseId])
   @@index([userId])
 }
 
-// payment is in two relation with user sent and received
-model payments{
-  id String @default(uuid()) @id
-  createdAt DateTime @default(now())
-  amount Float
-
-  sentId String
+model payments {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  amount     Float
+  sentId     String
   receivedId String
-
-  sent user @relation("sender",fields: [sentId],references: [id])
-  received user @relation("receiver",fields: [receivedId],references: [id])
-
-  groupId String?
-  group group? @relation(fields: [groupId],references: [id])
+  groupId    String?
+  group      group?   @relation(fields: [groupId], references: [id])
+  received   user     @relation("receiver", fields: [receivedId], references: [id])
+  sent       user     @relation("sender", fields: [sentId], references: [id])
 
   @@index([groupId])
   @@index([sentId])

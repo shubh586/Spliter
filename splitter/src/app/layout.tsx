@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
+
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
-import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -24,14 +23,12 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-          <ConvexClientProvider>
             <Header />
             <main className=" min-h-screen ">
               <Toaster />
 
               {children}
             </main>
-          </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>
