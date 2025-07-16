@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role{
+  member
+  admin
+}
+
 model user {
   id       String         @id @default(uuid())
   name     String
@@ -25,6 +30,7 @@ model user {
 model group {
   id        String         @id @default(uuid())
   name      String
+  description String?
   createdAt DateTime       @default(now())
   expenses  expenses[]
   members   groupmembers[]
@@ -34,11 +40,11 @@ model group {
 model groupmembers {
   id       String   @id @default(uuid())
   joinedAt DateTime @default(now())
+  role Role @default(member)
   userId   String
   groupId  String
   group    group    @relation(fields: [groupId], references: [id])
   user     user     @relation(fields: [userId], references: [id])
-
   @@index([userId])
   @@index([groupId])
 }
@@ -49,13 +55,18 @@ model expenses {
   amount      Float
   description String
   paidBy      String
-  groupId     String
-  group       group    @relation(fields: [groupId], references: [id])
+  groupId     String?
+  group       group ?   @relation(fields: [groupId], references: [id])
   paid        user     @relation(fields: [paidBy], references: [id])
   splits      splits[]
-
   @@index([paidBy])
   @@index([groupId])
+}
+
+enum SplitType{
+equal
+percentage
+exact
 }
 
 model splits {
@@ -66,7 +77,7 @@ model splits {
   userId    String
   expense   expenses @relation(fields: [expenseId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
-
+  spliytype SplitType @default(equal)
   @@index([expenseId])
   @@index([userId])
 }
