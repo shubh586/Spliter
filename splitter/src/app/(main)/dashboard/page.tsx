@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 
 import { Expenses } from "@/components/dashboard/Expenses";
+
 const Dashboard = () => {
   return (
     <div className="container mx-auto space-y-6 py-6 ">
@@ -80,7 +81,11 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Balance detatils</CardTitle>
-                <Button asChild>
+                <Button
+                  asChild
+                  variant="link"
+                  className="bg-gradient-to-bl from-green-500 to-green-700 hover:brightness-110 text-white p-0"
+                >
                   <Link href="/contacts">
                     view all <ChevronRight className="ml-1 h-4 w-4" />
                   </Link>
@@ -97,8 +102,12 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Groups</CardTitle>
-                <Button asChild>
-                  <Link href="/groups">
+                <Button
+                  asChild
+                  variant="link"
+                  className="bg-gradient-to-bl from-green-500 to-green-700 hover:brightness-110 text-white p-0"
+                >
+                  <Link href="/contacts">
                     view all <Users className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
@@ -111,10 +120,10 @@ const Dashboard = () => {
             </CardContent>
             <CardFooter>
               <div className="w-full flex justify-between items-center">
-                <p> Create New Group</p>
-                <Button asChild>
-                  <Link href="/groups">
+                <Button variant="outline" asChild className="w-full">
+                  <Link href="/contacts?createGroup=true">
                     <Users className="ml-1 h-4 w-4" />
+                    Create New Group
                   </Link>
                 </Button>
               </div>

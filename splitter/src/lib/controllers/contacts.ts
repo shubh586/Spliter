@@ -1,34 +1,10 @@
 import prisma from "@/lib/prisma";
-import { getCurrentUser } from "./storeduser";
+import { getCurrentUser } from "@/lib/controllers/storeduser"
 
 export const getAllContacts = async () => {
   const user = await getCurrentUser();
   if (!user) throw new Error("User is not authenticated");
   const userId = user.id;
-  //geting the contacts where user have paid
-  //   const contacts = await prisma.expenses.findMany({
-  //     where: { paidBy: userId },
-  //     include: {
-  //       splits: true,
-  //     },
-  //   });
-  //   // where you were involved in the splits
-  //   const contacts2 = await prisma.expenses.findMany({
-  //     where: {
-  //       groupId: null,
-  //       paidBy: {
-  //         not: userId,
-  //       },
-  //       splits:{
-  //         some: {
-  //           userId,
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       splits: true,
-  //     },
-  //   });
   const [contacts, contacts2] = await Promise.all([
     prisma.expenses.findMany({
       where: { paidBy: userId },
@@ -55,11 +31,6 @@ export const getAllContacts = async () => {
   ]);
 
   const totalContacts = [...contacts, ...contacts2];
-
-  // console.log(totalContacts)
-
-  // return totalContacts
-  // getting the unique contacts
   const uniqueContactsId = new Set<string>();
   for (const exm of totalContacts) {
     if (exm.paidBy !== userId) uniqueContactsId.add(exm.id);

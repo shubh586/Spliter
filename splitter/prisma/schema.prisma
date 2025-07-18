@@ -22,9 +22,11 @@ model user {
   received payments[]     @relation("receiver")
   sent     payments[]     @relation("sender")
   splits   splits[]
+  imageUrl String?
 
   @@index([email])
   @@index([clerkId])
+  @@index([name])
 }
 
 model group {

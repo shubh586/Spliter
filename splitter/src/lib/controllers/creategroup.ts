@@ -8,7 +8,7 @@ export const createGroup = async ({
 }: {
   name: string;
   description?: string;
-  members: string[];//array of ids
+  members: string[];
 }) => {
   const user = await getCurrentUser();
   if (!user) throw new Error("Not authenticated");
