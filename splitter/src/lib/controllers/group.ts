@@ -17,7 +17,7 @@ export const getGroupExpenses = async (groupId: string) => {
     },
   });
   if (!groupWithMembers) throw new Error("Group not found");
-  console.log("This is group with members", groupWithMembers);
+ 
   //check the member exits in the groupWithMembers or not
   const isUser = groupWithMembers.members.some(
     (member) => member.userId === user.id
@@ -33,14 +33,14 @@ export const getGroupExpenses = async (groupId: string) => {
     },
   });
   //gettin settelments
-  const settelments = await prisma.payments.findMany({
+  const settlements = await prisma.payments.findMany({
     where: { groupId },
   });
 
   const groupMembers = groupWithMembers.members.map((member) => ({
     id: member.user.id,
     name: member.user.name,
-    emial: member.user.email,
+    email: member.user.email,
     role: member.role,
   }));
 
@@ -77,7 +77,7 @@ export const getGroupExpenses = async (groupId: string) => {
 
   // settelments in groups
 
-  for (const settel of settelments) {
+  for (const settel of settlements) {
     totals[settel.sentId] += settel.amount;
     totals[settel.receivedId] -= settel.amount;
     Records[settel.sentId][settel.receivedId] -= settel.amount;
@@ -104,18 +104,19 @@ export const getGroupExpenses = async (groupId: string) => {
 
   const balances = groupMembers.map((m) => ({
     ...m,
-    owesFrom: Object.entries(Records[m.id])
+    owesTo: Object.entries(Records[m.id])
       .filter(([, value]) => value > 0)
       .map(([key, value]) => ({
         to: key,
         amount: value,
-      })), //[{to,amount},{}] mujhe dene hai
-    owesTo: idss
+      })), //[{to,amount},{}] m ko dene hai
+    owesFrom: idss
       .filter((id) => id !== m.id && Records[id][m.id] > 0)
       .map((other) => ({
         from: other,
         amount: Records[other][m.id],
       })), // paisa hi paisa aane wala hai
+    totalBalance:totals[m.id]
   }));
 
   const memberLookup = Object.fromEntries(
@@ -129,9 +130,11 @@ export const getGroupExpenses = async (groupId: string) => {
       description: groupWithMembers?.description,
     },
     expenses,
-    settelments,
+    settlements,
     members: groupMembers,
     balances,
     memberLookup,
   };
 };
+
+

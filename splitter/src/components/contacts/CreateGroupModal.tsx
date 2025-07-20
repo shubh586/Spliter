@@ -104,7 +104,7 @@ const CreateGroupModal = ({
     try {
       const memberIds = selectedMembers.map((member) => member.id);
 
-      const response = await axios.post("/api/creategroup/", {
+      const response = await axios.post("/api/group/creategroup/", {
         name: data.name,
         description: data.description,
         members: memberIds,

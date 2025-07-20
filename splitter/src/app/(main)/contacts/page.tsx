@@ -36,7 +36,7 @@ const Page = () => {
   const { data, isLoading } = useServerhook<ContactData>(
     "/api/contacts/getAllcontacts"
   );
-  
+
 
   useEffect(() => {
     const groupParam = searchParams.get("createGroup");
@@ -50,7 +50,7 @@ const Page = () => {
   },[searchParams,router])
 
 
-
+  
   if (isLoading) {
     return (
       <div className="container mx-auto py-12">

@@ -79,7 +79,7 @@ model splits {
   userId    String
   expense   expenses @relation(fields: [expenseId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
-  spliytype SplitType @default(equal)
+  spliytype SplitType @default(equal)//spelling check
   @@index([expenseId])
   @@index([userId])
 }
