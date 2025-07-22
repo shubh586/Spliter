@@ -13,11 +13,12 @@ enum Role{
 }
 
 model user {
-  id       String         @id @default(uuid())
+  id       String         @id @default(uuid()) 
   name     String
   email    String         @unique
   clerkId  String         @unique
-  expenses expenses[]
+  expenses expenses[]   @relation("paid")
+  //createdExpense expenses[] @relation("created")
   groups   groupmembers[]
   received payments[]     @relation("receiver")
   sent     payments[]     @relation("sender")
@@ -57,9 +58,12 @@ model expenses {
   amount      Float
   description String
   paidBy      String
+  createdBy   String
   groupId     String?
   group       group ?   @relation(fields: [groupId], references: [id])
-  paid        user     @relation(fields: [paidBy], references: [id])
+  paid        user     @relation("paid",fields: [paidBy], references: [id])
+  //created user   @relation("created",fields: [createdBy],references: [id])
+  catagoery   String   @default("Other")
   splits      splits[]
   @@index([paidBy])
   @@index([groupId])

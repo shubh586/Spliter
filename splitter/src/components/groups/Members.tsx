@@ -11,7 +11,7 @@ const Members = ({ members, currentUser }: { members: GroupMember[],currentUser:
     return <p className="text-muted-foreground text-sm">No members found.</p>;
   }
   return (
-    <Card className="border rounded-xl shadow-sm w-full">
+    <Card className="border-border rounded-xl shadow-sm w-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">Group Members</CardTitle>
       </CardHeader>

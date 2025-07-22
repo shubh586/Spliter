@@ -36,7 +36,7 @@ const Groupbalances = ({
     const isSettleup:boolean = me.totalBalance === 0 && owesFrom.length === 0 && owesTo.length === 0;
 
     return (
-      <Card>
+      <Card className="hover:bg-muted/30 transition-colors">
         <CardHeader className="pb-2">
           <CardTitle className="text-xl">Group Balances</CardTitle>
         </CardHeader>

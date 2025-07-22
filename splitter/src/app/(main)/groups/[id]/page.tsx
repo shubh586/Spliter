@@ -1,26 +1,19 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useServerhook from "../../../../../hooks/useServerhook";
 import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { BarLoader } from "react-spinners";
-import { GroupExpenseData,User } from "./types";
+import { GroupExpenseData, User } from "./types";
 import Members from "@/components/groups/Members";
 import Groupbalances from "@/components/groups/Groupbalances";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import Expense from "@/components/groups/Expense";
+import Link from "next/link";
+import Settlements from '@/components/Settlements'
 const Page = () => {
+  const [activeTab, setActiveTab] = useState<string>("expenses");
   const params = useParams();
   const { data: currentUser, isLoading: getingUser } = useServerhook<User>(
     "/api/user/currentuser"
@@ -37,7 +30,7 @@ const Page = () => {
 
   if (getingUser) {
     return (
-      <div className="container mx-auto py-12">
+      <div className="container mx-auto py-12 ">
         <BarLoader width={"100%"} color="#36d7b7" />
       </div>
     );
@@ -50,9 +43,11 @@ const Page = () => {
     );
   }
   if (!currentUser) {
-   return <div className="container mx-auto py-12">
-      <p>User not found</p>
-    </div>;
+    return (
+      <div className="container mx-auto py-12">
+        <p>User not found</p>
+      </div>
+    );
   }
   if (!data) {
     return (
@@ -63,18 +58,20 @@ const Page = () => {
   }
 
   // const group = data.group;
-  // const expenses = data.expenses;
-  // const settlements = data.settlements;
-  // const userLookUpMap = data.memberLookup;
+  const expenses = data.expenses;
+  const settlements = data.settlements;
+  const userLookUpMap = data.memberLookup;
   const members = data.members;
   const balances = data.balances;
 
   return (
     <div className="container mx-auto py-6 space-y-6 max-w-4xl">
       <div>
-        <Button type="button" variant="outline">
-          <ArrowLeft />
-          Back Option
+        <Button type="button" variant="outline" asChild>
+          <Link href="/contacts">
+            <ArrowLeft className="h-4 w-4" />
+            Back Option
+          </Link>
         </Button>
       </div>
       {/* name and settle up bar */}
@@ -93,29 +90,62 @@ const Page = () => {
         </div>
 
         {/* settelup annd add expenses option */}
-        <div className="flex flex-row gap-4 w-full">
+        <div className="flex flex-row justify-between w-full">
           <Button variant={"outline"}>
             <ArrowLeftRight className="w-4 h-4 " />
             SettleUp
           </Button>
-          <Button>
-            <PlusCircle />
-            Add expenses
+          <Button asChild>
+            <Link href="/expenses">
+              <PlusCircle />
+              Add expenses
+            </Link>
           </Button>
         </div>
       </div>
+
       {/* grid of  */}
-      <div className="grid sm:grid-cols-3 gap-4">
-        <div className="sm:col-span-2 border rounded-xl shadow-sm w-full">
+      <div className="grid sm:grid-cols-3 gap-3">
+        <div className="sm:col-span-2 border-border rounded-xl shadow-sm w-full">
           <Groupbalances balances={balances} currentUser={currentUser} />
         </div>
         <div className="w-full">
           <Members members={members} currentUser={currentUser} />
         </div>
       </div>
+      {/* tabs */}
+      <Tabs
+        defaultValue="expenses"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-4"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="expenses">
+            Expenses ({expenses.length})
+          </TabsTrigger>
+          <TabsTrigger value="settlements">
+            Settlements ({settlements.length})
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="expenses" className="space-y-4">
+          <Expense
+            expenses={expenses}
+            showOtherPerson={true}
+            isGroupExpense={true}
+            userLookupMap={userLookUpMap}
+            currentUser={currentUser}
+            otherPersonId={null}
+          />
+        </TabsContent>
+
+        <TabsContent value="settlements" className="space-y-4">
+          <Settlements  settlements={settlements} currentUser={currentUser} userLookupMap={userLookUpMap} isGroupExpense={true} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
-
 
 export default Page;
