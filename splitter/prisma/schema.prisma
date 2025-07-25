@@ -55,6 +55,7 @@ model groupmembers {
 model expenses {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
+  date        DateTime @default(now())//
   amount      Float
   description String
   paidBy      String
@@ -83,7 +84,7 @@ model splits {
   userId    String
   expense   expenses @relation(fields: [expenseId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
-  spliytype SplitType @default(equal)//spelling check
+  splitType SplitType @default(equal)//spelling check
   @@index([expenseId])
   @@index([userId])
 }

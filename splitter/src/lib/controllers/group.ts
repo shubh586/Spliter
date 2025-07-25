@@ -17,7 +17,7 @@ export const getGroupExpenses = async (groupId: string) => {
     },
   });
   if (!groupWithMembers) throw new Error("Group not found");
- 
+
   //check the member exits in the groupWithMembers or not
   const isUser = groupWithMembers.members.some(
     (member) => member.userId === user.id
@@ -116,7 +116,7 @@ export const getGroupExpenses = async (groupId: string) => {
         from: other,
         amount: Records[other][m.id],
       })), // paisa hi paisa aane wala hai
-    totalBalance:totals[m.id]
+    totalBalance: totals[m.id],
   }));
 
   const memberLookup = Object.fromEntries(
@@ -137,4 +137,70 @@ export const getGroupExpenses = async (groupId: string) => {
   };
 };
 
+export const getGroupsWithORWirhoutMemebrs = async () => {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    throw new Error("You are not authenticated");
+  }
 
+  const groups = await prisma.group.findMany({
+    where: {
+      members: {
+        some: {
+          userId: currentUser.id,
+        },
+      },
+    },
+    include: {
+      members: true,
+    },
+  });
+  if (groups.length === 0) {
+    return {
+      groups:[]
+    }
+  }
+  return {
+    groups: groups.map((group) => ({
+      id: group.id,
+      name: group.name,
+      description: group.description,
+      createdAt: group.createdAt,
+      members: group.members.length,
+    })),
+  };
+};
+
+export const getGroupMembersWithId = async (groupId: string | null) => {
+  if (!groupId) {
+    throw new Error("Problem in loading groups");
+  }
+
+  const selectedGroup = await prisma.group.findUnique({
+    where: { id: groupId },
+    include: {
+      members: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+  if (!selectedGroup) {
+    throw new Error("Group may not exits . please create the group");
+  }
+  return {
+    selectedGroup: {
+      id: selectedGroup.id,
+      name: selectedGroup.name,
+      description: selectedGroup.description,
+      createdAt: selectedGroup.createdAt,
+      members: selectedGroup.members.map((member) => ({
+        id: member.user.id,
+        name: member.user.name,
+        email: member.user.email,
+        role: member.role,
+      })),
+    },
+  };
+};

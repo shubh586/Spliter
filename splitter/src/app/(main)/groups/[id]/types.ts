@@ -1,8 +1,8 @@
-
+import { Role } from "@prisma/client";
 export type GroupMember = {
   id: string;
   name: string;
-  email: string; 
+  email: string;
   role: "admin" | "member";
 };
 export type User = {
@@ -27,7 +27,7 @@ export type Split = {
   amount: number;
   expenseId: string;
   userId: string;
-  splittype?: "equal" | "percentage" | "exact"; 
+  splittype?: "equal" | "percentage" | "exact";
 };
 
 export type Settlement = {
@@ -47,20 +47,41 @@ export type Balance = GroupMember & {
     from: string;
     amount: number;
   }[];
-  totalBalance:number
+  totalBalance: number;
 };
-
 
 export type GroupExpenseData = {
   group: {
-    id: string,
-    name: string,
-    description: string | null
-  },
-  expenses: Expense[],
-  settlements: Settlement[],
-  members: GroupMember[],
-  balances: Balance[],
-  memberLookup: { [key: string]: GroupMember }
+    id: string;
+    name: string;
+    description: string | null;
+  };
+  expenses: Expense[];
+  settlements: Settlement[];
+  members: GroupMember[];
+  balances: Balance[];
+  memberLookup: { [key: string]: GroupMember };
+};
+
+
+export type GroupSummary = {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: Date;
+  members: number;
+};
+
+export type SelectedGroupMember = {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: Date;
+  members: {
+    id: string;
+    name: string;
+    email: string;
+    role: Role;
+  }[];
 };
 
