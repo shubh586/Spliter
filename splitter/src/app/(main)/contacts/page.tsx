@@ -9,25 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, Users, User } from "lucide-react";
 import CreateGroupModal from "@/components/contacts/CreateGroupModal";
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  type: "user";
-};
-
-type Group = {
-  id: string;
-  name: string;
-  description: string | null;
-  memberCount: number;
-  type: "group";
-};
-
-type ContactData = {
-  users: User[];
-  groups: Group[];
-};
+import type { User1,ContactData, Group1 } from "@/app/types";
 const Page = () => {
   const [isGroupModalOpen, setIsGroupModalOpen] = useState<boolean>(false);
   const router = useRouter();
@@ -86,14 +68,14 @@ const Page = () => {
             </Card>
           ) : (
             <div className="flex flex-col gap-4">
-              {users.map((user: User) => (
+              {users.map((user: User1) => (
                 <Link key={user.id} href={`/person/${user.id}`}>
                   <Card className="hover:bg-muted/30 transition-colors cursor-pointer">
                     <CardContent className="py-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10">
-                            <AvatarImage src={""} />
+                            <AvatarImage src={user.imageUrl} />
                             <AvatarFallback>
                               {user.name.charAt(0)}
                             </AvatarFallback>
@@ -128,7 +110,7 @@ const Page = () => {
             </Card>
           ) : (
             <div className="flex flex-col gap-4">
-              {groups.map((group: Group) => (
+              {groups.map((group: Group1) => (
                 <Link key={group.id} href={`/groups/${group.id}`}>
                   <Card className="hover:bg-muted/30 transition-colors cursor-pointer">
                     <CardContent className="py-4">

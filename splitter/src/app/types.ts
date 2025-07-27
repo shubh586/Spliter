@@ -4,12 +4,14 @@ export type GroupMember = {
   name: string;
   email: string;
   role: "admin" | "member";
+  imageUrl: string | "";
 };
 export type User = {
   id: string;
   email: string;
   name: string;
   clerkId: string;
+  imageUrl: string | "";
 };
 export type Expense = {
   id: string;
@@ -17,7 +19,7 @@ export type Expense = {
   description: string;
   createdAt: string;
   paidBy: string;
-  groupId: string | null;
+  groupId?: string;
   splits: Split[];
 };
 
@@ -34,7 +36,7 @@ export type Settlement = {
   id: string;
   amount: number;
   createdAt: string;
-  groupId: string | null;
+  groupId?: string;
   sentId: string;
   receivedId: string;
 };
@@ -63,7 +65,6 @@ export type GroupExpenseData = {
   memberLookup: { [key: string]: GroupMember };
 };
 
-
 export type GroupSummary = {
   id: string;
   name: string;
@@ -82,6 +83,53 @@ export type SelectedGroupMember = {
     name: string;
     email: string;
     role: Role;
+    imageUrl: string | "";
   }[];
 };
 
+export type Splits = {
+  userId: string;
+  amount: number;
+};
+
+export type CreateExpenseInput = {
+  description: string;
+  amount: number;
+  category: string;
+  date: number;
+  paidByUserId: string;
+  splitType: "equal" | "percentage" | "exact";
+  splits: Splits[];
+  groupId?: string;
+};
+
+export type User1 = {
+  id: string;
+  name: string;
+  email: string;
+  imageUrl: string | "";
+  type: "user";
+};
+
+export type Group1 = {
+  id: string;
+  name: string;
+  description: string | null;
+  memberCount: number;
+  type: "group";
+};
+
+export type ContactData = {
+  users: User1[];
+  groups: Group1[];
+};
+
+export type newSplits= {
+  userId: string;
+  name: string;
+  email: string;
+  imageUrl: string | "";
+  amount: number;
+  percentage: number;
+  paid: boolean;
+}

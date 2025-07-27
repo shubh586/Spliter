@@ -47,6 +47,7 @@ export const getAllContacts = async () => {
       id: true,
       name: true,
       email: true,
+      imageUrl: true
     },
   });
 
@@ -79,6 +80,7 @@ export const getAllContacts = async () => {
       name: user.name,
       email: user.email,
       type: "user" as const,
+      imageUrl:user.imageUrl
     })),
     groups: groupResults,
   };

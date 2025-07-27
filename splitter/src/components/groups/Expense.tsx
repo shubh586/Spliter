@@ -3,16 +3,12 @@ import React from "react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import { getCategoryById, getCategoryIcon } from "@/lib/ex-categories";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import type {
-  Expense,
-  GroupMember,
-  User,
-} from "@/app/(main)/groups/[id]/types";
+import type { Expense, GroupMember, User } from "@/app/types";
 
 const Expense = ({
   expenses,
@@ -50,7 +46,8 @@ const Expense = ({
     const canDelete = expense.paidBy === currentUser.id;
     return canDelete;
   };
-  const handleDeleteExpense = async () => {//expense
+  const handleDeleteExpense = async () => {
+    //expense
     const confirmed = window.confirm(
       "Are you sure you want to delete this expense? This action cannot be undone."
     );
@@ -66,9 +63,9 @@ const Expense = ({
   return (
     <div className="flex flex-col gap-4">
       {expenses.map((expense) => {
-        const payer =  getUserDatails (expense.paidBy);
+        const payer = getUserDatails(expense.paidBy);
         const isCurrentUserPayer = expense.paidBy === currentUser.id;
-        const category = getCategoryById("other");//expense.category
+        const category = getCategoryById("other"); //expense.category
         const CategoryIcon = getCategoryIcon(category.id);
         const showDeleteOption = canDeleteExpense(expense);
 
@@ -163,7 +160,7 @@ const Expense = ({
                         className="flex items-center gap-1"
                       >
                         <Avatar className="h-4 w-4">
-                          <AvatarImage src={""} />
+                          <AvatarImage src={splitUser.imageUrl} />
                           <AvatarFallback>
                             {splitUser.name?.charAt(0) || "?"}
                           </AvatarFallback>
@@ -186,8 +183,3 @@ const Expense = ({
 };
 
 export default Expense;
-
-
-
-  
-

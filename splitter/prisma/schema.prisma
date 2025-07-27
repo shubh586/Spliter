@@ -64,7 +64,7 @@ model expenses {
   group       group ?   @relation(fields: [groupId], references: [id])
   paid        user     @relation("paid",fields: [paidBy], references: [id])
   //created user   @relation("created",fields: [createdBy],references: [id])
-  catagoery   String   @default("Other")
+  category   String   @default("Other")
   splits      splits[]
   @@index([paidBy])
   @@index([groupId])

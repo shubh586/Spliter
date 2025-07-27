@@ -5,13 +5,13 @@ import useServerhook from "../../../../../hooks/useServerhook";
 import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { BarLoader } from "react-spinners";
-import { GroupExpenseData, User } from "./types";
+import { GroupExpenseData, User } from "../../../types";
 import Members from "@/components/groups/Members";
 import Groupbalances from "@/components/groups/Groupbalances";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Expense from "@/components/groups/Expense";
 import Link from "next/link";
-import Settlements from '@/components/Settlements'
+import Settlements from "@/components/Settlements";
 const Page = () => {
   const [activeTab, setActiveTab] = useState<string>("expenses");
   const params = useParams();
@@ -141,7 +141,12 @@ const Page = () => {
         </TabsContent>
 
         <TabsContent value="settlements" className="space-y-4">
-          <Settlements  settlements={settlements} currentUser={currentUser} userLookupMap={userLookUpMap} isGroupExpense={true} />
+          <Settlements
+            settlements={settlements}
+            currentUser={currentUser}
+            userLookupMap={userLookUpMap}
+            isGroupExpense={true}
+          />
         </TabsContent>
       </Tabs>
     </div>

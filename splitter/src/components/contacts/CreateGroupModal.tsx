@@ -40,18 +40,13 @@ const groupSchema = z.object({
   name: z.string().min(1, "group name is required"),
   description: z.string().optional(),
 });
-
-type User = {
-  name: string;
-  email: string;
-  id: string;
-  clerkId: string;
-};
+import type { User } from "@/app/types";
 
 type Contact = {
   id: string;
   name: string;
   email: string;
+  imageUrl:string|""
 };
 
 // type Group = {
@@ -169,7 +164,7 @@ const CreateGroupModal = ({
                   {data.name && (
                     <Badge variant="secondary" className="px-3 py-1">
                       <Avatar className="h-5 w-5 mr-2">
-                        <AvatarImage src={""} />
+                        <AvatarImage src={data.imageUrl} />
                         <AvatarFallback className="h-5 w-5  bg-green-400">
                           {data.name?.charAt(0) || "?"}
                         </AvatarFallback>
@@ -184,7 +179,7 @@ const CreateGroupModal = ({
                       className="px-3 py-1"
                     >
                       <Avatar className="h-5 w-5 mr-2">
-                        <AvatarImage src={""} />
+                        <AvatarImage src={data.imageUrl} />
                         <AvatarFallback className="h-5 w-5  bg-green-400">
                           {data.name?.charAt(0) || "?"}
                         </AvatarFallback>
@@ -240,7 +235,7 @@ const CreateGroupModal = ({
                                 >
                                   <div className="flex items-center gap-2">
                                     <Avatar className="h-6 w-6">
-                                      <AvatarImage src={""} />
+                                      <AvatarImage src={user.imageUrl} />
                                       <AvatarFallback>
                                         {user.name?.charAt(0) || "?"}
                                       </AvatarFallback>

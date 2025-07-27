@@ -78,7 +78,7 @@ export const searchALlContacts = async (query:string) => {
     id: user.id,
     name: user.name,
     email: user.email,
-    //imageUrl: (user as any).imageUrl || null,
+    imageUrl: user.imageUrl || null,
   }));
 
 }

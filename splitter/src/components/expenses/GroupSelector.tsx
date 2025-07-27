@@ -1,16 +1,13 @@
-"use client"
+"use client";
 
-import type {
-  GroupSummary,
-  SelectedGroupMember,
-} from "@/app/(main)/groups/[id]/types";
+import type { GroupSummary, SelectedGroupMember } from "@/app/types";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Users } from "lucide-react";
 import React, { useState } from "react";
 import { BarLoader } from "react-spinners";
@@ -23,30 +20,27 @@ const GroupSelector = ({
   onChange: (group: SelectedGroupMember | null) => void;
 }) => {
   const [selectedGroupId, setSelectedGroupId] = useState("");
-const[isGroupLoading, setIsGroupLoading] = useState(false);
+  const [isGroupLoading, setIsGroupLoading] = useState(false);
   const { data: groups, isLoading } = useServerhook<GroupSummary[] | []>(
     "/api/expenses/getgroups/"
   );
 
-  const handleGroupChange = async(groupId: string) => {
+  const handleGroupChange = async (groupId: string) => {
     setSelectedGroupId(groupId);
-    setIsGroupLoading(true)
+    setIsGroupLoading(true);
     try {
       const response = await axios.post<SelectedGroupMember>(
         `/api/expenses/getGroupmembers/`,
-        {groupId}
+        { groupId }
       );
       const groupMemberdetails = response.data;
-      console.log(groupMemberdetails)
+      console.log(groupMemberdetails);
       onChange(groupMemberdetails);
-    }
-     catch (error) {
-      console.log("error from getting groups members ,", error)
-      
+    } catch (error) {
+      console.log("error from getting groups members ,", error);
     } finally {
-      setIsGroupLoading(false)
+      setIsGroupLoading(false);
     }
-
   };
 
   if (isLoading) {
@@ -56,7 +50,8 @@ const[isGroupLoading, setIsGroupLoading] = useState(false);
   if (!groups) {
     return (
       <div className="text-sm text-amber-600 p-2 bg-amber-50 rounded-md">
-        You need to create a group first before adding a group expense null wala.
+        You need to create a group first before adding a group expense null
+        wala.
       </div>
     );
   }

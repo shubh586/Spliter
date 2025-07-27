@@ -1,12 +1,17 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupMember } from "@/app/(main)/groups/[id]/types";
-import { User } from "@/app/(main)/groups/[id]/types";
+import { GroupMember } from "@/app/types";
+import { User } from "@/app/types";
 import { Badge } from "@/components/ui/badge";
 
-
-const Members = ({ members, currentUser }: { members: GroupMember[],currentUser:User }) => {
+const Members = ({
+  members,
+  currentUser,
+}: {
+  members: GroupMember[];
+  currentUser: User;
+}) => {
   if (!members || members.length === 0) {
     return <p className="text-muted-foreground text-sm">No members found.</p>;
   }
@@ -23,7 +28,7 @@ const Members = ({ members, currentUser }: { members: GroupMember[],currentUser:
             <div key={member.id} className="flex items-center  gap-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src="" alt={member.name} />
+                  <AvatarImage src={member.imageUrl} alt={member.name} />
                   <AvatarFallback className="bg-muted text-muted-foreground">
                     {member.name.charAt(0).toUpperCase()}
                   </AvatarFallback>

@@ -1,8 +1,4 @@
-import type {
-  Settlement,
-  User,
-  GroupMember,
-} from "@/app/(main)/groups/[id]/types";
+import type { Settlement, User, GroupMember } from "@/app/types";
 import { format } from "date-fns";
 import React from "react";
 import { Card, CardContent } from "./ui/card";

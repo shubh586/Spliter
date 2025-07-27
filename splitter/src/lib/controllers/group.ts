@@ -41,7 +41,9 @@ export const getGroupExpenses = async (groupId: string) => {
     id: member.user.id,
     name: member.user.name,
     email: member.user.email,
+    imageUrl:member.user.imageUrl,
     role: member.role,
+
   }));
 
   //member ids
@@ -200,6 +202,7 @@ export const getGroupMembersWithId = async (groupId: string | null) => {
         name: member.user.name,
         email: member.user.email,
         role: member.role,
+        imageUrl:member.user.imageUrl
       })),
     },
   };
