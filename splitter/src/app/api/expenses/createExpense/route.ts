@@ -6,8 +6,8 @@ import { createExpense } from "@/lib/controllers/expenses";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const data = await createExpense(groupId);
-    return NextResponse.json(data.selectedGroup);
+    const data = await createExpense(body);
+    return NextResponse.json(data);
   }  catch (err) {
     console.error(err);
     return NextResponse.json(

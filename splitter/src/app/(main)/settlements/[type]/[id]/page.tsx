@@ -1,0 +1,204 @@
+"use client";
+
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BarLoader } from "react-spinners";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Users } from "lucide-react";
+import SettlementForm from "@/components/settlements/settlementform";
+import useServerhook from "../../../../../../hooks/useServerhook";
+import type { User } from "@/app/types";
+import axios from "axios";
+// Types matching our Prisma backend
+type UserBalance = {
+  type: "user";
+  OtherUser: {
+    userId: string;
+    name: string;
+    email: string;
+    imageUrl: string | null;
+  };
+  youAreOwed: number;
+  youOwe: number;
+  netBalance: number;
+};
+
+type Member = {
+  userId: string;
+  name: string;
+  imageUrl: string | null;
+  youAreOwed: number;
+  youOwe: number;
+  netBalance: number;
+};
+
+type GroupBalance = {
+  type: "group";
+  group: {
+    id: string;
+    name: string;
+    description: string | null;
+  };
+  balances: Member[];
+};
+
+type SettlementData = UserBalance | GroupBalance;
+
+export default function SettlementPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { type, id } = params;
+
+  const [data, setData] = useState<SettlementData | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch current user
+  const {
+    data: currentUser,
+    isLoading: searching,
+    error: isError,
+  } = useServerhook<User>("/api/user/currentuser");
+
+  // Fetch settlement data
+  useEffect(() => {
+    const fetchSettlementData = async () => {
+      if (!currentUser) return;
+
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          "/api/settlements/getsettlementsdata", {
+            entityType: type as string,
+            entityId:id as string
+          }
+        );
+        const data=response.data
+   
+        setData(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSettlementData();
+  }, [type, id, currentUser]);
+
+  // Function to handle after successful settlement creation
+  const handleSuccess = () => {
+    // Redirect based on type
+    if (type === "user") {
+      router.push(`/person/${id}`);
+    } else if (type === "group") {
+      router.push(`/groups/${id}`);
+    }
+  };
+
+  if (searching || !currentUser || isLoading) {
+    return (
+      <div className="container mx-auto py-12">
+        <BarLoader width={"100%"} color="#36d7b7" />
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="container mx-auto py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">No Data Found</h1>
+          <p className="text-muted-foreground mb-4">user not found</p>
+          <Button onClick={() => router.back()}>Go Back</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={() => router.back()}>Go Back</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="container mx-auto py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">No Data Found</h1>
+          <p className="text-muted-foreground mb-4">
+            Could not find settlement data for this {type}.
+          </p>
+          <Button onClick={() => router.back()}>Go Back</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-6 max-w-lg">
+      <Button
+        variant="outline"
+        size="sm"
+        className="mb-4"
+        onClick={() => router.back()}
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Back
+      </Button>
+
+      <div className="mb-6">
+        <h1 className="text-5xl gradient-title">Record a settlement</h1>
+        <p className="text-muted-foreground mt-1">
+          {type === "user"
+            ? `Settling up with ${(data as UserBalance)?.OtherUser?.name}`
+            : `Settling up in ${(data as GroupBalance)?.group?.name}`}
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            {type === "user" ? (
+              <Avatar className="h-10 w-10">
+                <AvatarImage
+                  src={(data as UserBalance)?.OtherUser?.imageUrl || undefined}
+                />
+                <AvatarFallback>
+                  {(data as UserBalance)?.OtherUser?.name?.charAt(0) || "?"}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <div className="bg-primary/10 p-2 rounded-md">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+            )}
+            <CardTitle>
+              {type === "user"
+                ? (data as UserBalance)?.OtherUser?.name
+                : (data as GroupBalance)?.group?.name}
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <SettlementForm
+            entityType={type as "user" | "group"}
+            entityData={data}
+            currentUser={currentUser}
+            onSuccess={handleSuccess}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

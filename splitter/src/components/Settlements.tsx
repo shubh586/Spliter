@@ -9,11 +9,11 @@ const Settlements = ({
   settlements,
   currentUser,
   userLookupMap,
-  isGroupExpense = true,
+  isGroupExpense = false,
 }: {
   settlements: Settlement[];
   currentUser: User;
-  userLookupMap: { [key: string]: GroupMember };
+  userLookupMap: { [key: string]: GroupMember } ;
   isGroupExpense: boolean;
 }) => {
   const getUserDatails = (userId: string): GroupMember => {

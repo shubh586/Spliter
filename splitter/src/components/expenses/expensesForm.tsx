@@ -93,7 +93,7 @@ const ExpensesForm = ({
       const formattedSplits = splits.map((split) => ({
         userId: split.userId,
         amount: split.amount,
-        paid: split.userId === data.paidBy,
+        // paid: split.userId === data.paidBy,
       }));
 
       const totalSplitAmount = formattedSplits.reduce(
@@ -121,7 +121,9 @@ const ExpensesForm = ({
           splits: formattedSplits,
           groupId,
         });
-        const rdata: string = reponse.data;
+
+   
+        const rdata: string = reponse.data.expenseId;
         if (rdata) {
           console.log("sucess expenses created");
         }

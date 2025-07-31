@@ -55,7 +55,9 @@ export const createExpense = async (input: CreateExpenseInput) => {
     include: { splits: true },
   });
 
-  return expense.id;
+  return {
+    expenseId:expense.id
+  }
 };
 // {
 //   id: string;

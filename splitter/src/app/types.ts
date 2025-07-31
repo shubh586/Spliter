@@ -4,7 +4,7 @@ export type GroupMember = {
   name: string;
   email: string;
   role: "admin" | "member";
-  imageUrl: string | "";
+  imageUrl: string | ""|null;
 };
 export type User = {
   id: string;
@@ -17,15 +17,15 @@ export type Expense = {
   id: string;
   amount: number;
   description: string;
-  createdAt: string;
+  createdAt: Date;
   paidBy: string;
-  groupId?: string;
+  groupId: string|null|undefined;
   splits: Split[];
 };
 
 export type Split = {
   id: string;
-  createdAt: string;
+  createdAt: Date;
   amount: number;
   expenseId: string;
   userId: string;
@@ -35,8 +35,8 @@ export type Split = {
 export type Settlement = {
   id: string;
   amount: number;
-  createdAt: string;
-  groupId?: string;
+  createdAt: Date;
+  groupId: string|null|undefined;
   sentId: string;
   receivedId: string;
 };
@@ -133,3 +133,29 @@ export type newSplits= {
   percentage: number;
   paid: boolean;
 }
+export type settlementsArgs = {
+  amount: number;
+  note?: string;
+  paidBy: string;
+  receivedBy: string;
+  groupId?: string;
+};
+
+export type settlementsType = {
+  entityType: string;
+  entityId: string;
+};
+
+
+export type oneToOneExpenses = {
+  expenses: Expense[];
+  settlements: Settlement[];
+  otherUser: {
+    id: string;
+    email: string;
+    name: string;
+    imageUrl: string | null;
+    role:"member"
+  };
+  balance: number;
+};

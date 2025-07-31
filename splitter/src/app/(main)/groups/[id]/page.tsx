@@ -9,7 +9,7 @@ import { GroupExpenseData, User } from "../../../types";
 import Members from "@/components/groups/Members";
 import Groupbalances from "@/components/groups/Groupbalances";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import Expense from "@/components/groups/Expense";
+import Expense from "@/components/Expense";
 import Link from "next/link";
 import Settlements from "@/components/Settlements";
 const Page = () => {
@@ -91,9 +91,11 @@ const Page = () => {
 
         {/* settelup annd add expenses option */}
         <div className="flex flex-row justify-between w-full">
-          <Button variant={"outline"}>
-            <ArrowLeftRight className="w-4 h-4 " />
-            SettleUp
+          <Button variant={"outline"} asChild>
+            <Link href={`/settlements/group/${params.id}`}>
+              <ArrowLeftRight className="w-4 h-4 " />
+              SettleUp
+            </Link>
           </Button>
           <Button asChild>
             <Link href="/expenses">
