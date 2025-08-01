@@ -4,7 +4,14 @@ export type GroupMember = {
   name: string;
   email: string;
   role: "admin" | "member";
-  imageUrl: string | ""|null;
+  imageUrl: string | "" | null;
+};
+export type participant = {
+  id: string;
+  name: string;
+  email: string;
+  role: string|"";
+  imageUrl: string | "" | null;
 };
 export type User = {
   id: string;
@@ -19,7 +26,7 @@ export type Expense = {
   description: string;
   createdAt: Date;
   paidBy: string;
-  groupId: string|null|undefined;
+  groupId: string | null | undefined;
   splits: Split[];
 };
 
@@ -36,9 +43,10 @@ export type Settlement = {
   id: string;
   amount: number;
   createdAt: Date;
-  groupId: string|null|undefined;
+  groupId: string | null | undefined;
   sentId: string;
   receivedId: string;
+  note:string|null
 };
 export type Balance = GroupMember & {
   owesTo: {
@@ -107,7 +115,7 @@ export type User1 = {
   id: string;
   name: string;
   email: string;
-  imageUrl: string | "";
+  imageUrl: string | "" | undefined;
   type: "user";
 };
 
@@ -124,15 +132,15 @@ export type ContactData = {
   groups: Group1[];
 };
 
-export type newSplits= {
+export type newSplits = {
   userId: string;
   name: string;
   email: string;
-  imageUrl: string | "";
+  imageUrl: string | ""|null;
   amount: number;
   percentage: number;
   paid: boolean;
-}
+};
 export type settlementsArgs = {
   amount: number;
   note?: string;
@@ -146,7 +154,6 @@ export type settlementsType = {
   entityId: string;
 };
 
-
 export type oneToOneExpenses = {
   expenses: Expense[];
   settlements: Settlement[];
@@ -155,7 +162,56 @@ export type oneToOneExpenses = {
     email: string;
     name: string;
     imageUrl: string | null;
-    role:"member"
+    role: "member";
   };
   balance: number;
 };
+
+export type OtherUser = {
+  userId: string;
+  name: string;
+  email: string;
+  imageUrl: string | null;
+};
+
+export type UserSettlementData = {
+  type: "user";
+  OtherUser: OtherUser;
+  youAreOwed: number;
+  youOwe: number;
+  netBalance: number;
+};
+// type UserBalance = {
+//   type: "user";
+//   OtherUser: {
+//     userId: string;
+//     name: string;
+//     email: string;
+//     imageUrl: string | null;
+//   };
+//   youAreOwed: number;
+//   youOwe: number;
+//   netBalance: number;
+// };
+
+export type GroupMemberBalance = {
+  userId: string;
+  name: string;
+  imageUrl: string | null;
+  youAreOwed: number;
+  youOwe: number;
+  netBalance: number;
+};
+
+export type GroupSettlementData = {
+  type: "group";
+  group: {
+    id: string;
+    name: string;
+    description: string | null;
+  };
+  balances: GroupMemberBalance[];
+};
+
+
+

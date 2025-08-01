@@ -28,7 +28,10 @@ const Members = ({
             <div key={member.id} className="flex items-center  gap-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={member.imageUrl} alt={member.name} />
+                  <AvatarImage
+                    src={member.imageUrl === null ? "" : `${member.imageUrl}`}
+                    alt={member.name}
+                  />
                   <AvatarFallback className="bg-muted text-muted-foreground">
                     {member.name.charAt(0).toUpperCase()}
                   </AvatarFallback>

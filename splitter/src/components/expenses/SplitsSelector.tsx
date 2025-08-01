@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import type { newSplits } from "@/app/types";
+import type { newSplits, participant } from "@/app/types";
 
 export default function SplitSelector({
   type,
@@ -15,13 +15,7 @@ export default function SplitSelector({
 }: {
   type: "equal" | "exact" | "percentage";
   amount: number;
-  participants: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    imageUrl: string | "";
-  }[];
+  participants: participant[];
   paidBy: string;
   onSplitsChange: (newSplit: newSplits[]) => void;
 }) {
@@ -108,7 +102,7 @@ export default function SplitSelector({
         >
           <div className="flex items-center gap-2 min-w-[120px]">
             <Avatar className="h-7 w-7">
-              <AvatarImage src={split.imageUrl} />
+              <AvatarImage src={split.imageUrl===null?"":`${split.imageUrl}`} />
               <AvatarFallback>{split.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <span className="text-sm">

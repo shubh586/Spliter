@@ -90,7 +90,13 @@ const Groupbalances = ({
                       >
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={member.imageUrl} />
+                            <AvatarImage
+                              src={
+                                member.imageUrl === null
+                                  ? ""
+                                  : `${member.imageUrl}`
+                              }
+                            />
                             <AvatarFallback>
                               {member.name?.charAt(0) ?? "?"}
                             </AvatarFallback>
@@ -121,7 +127,13 @@ const Groupbalances = ({
                       >
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={member.imageUrl} />
+                            <AvatarImage
+                              src={
+                                member.imageUrl === null
+                                  ? ""
+                                  : `${member.imageUrl}`
+                              }
+                            />
                             <AvatarFallback>
                               {member.name?.charAt(0) ?? "?"}
                             </AvatarFallback>

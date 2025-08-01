@@ -98,8 +98,6 @@ model payments {
   receivedId String
   groupId    String?
   note       String?
-
-
   group      group?   @relation(fields: [groupId], references: [id])
   received   user     @relation("receiver", fields: [receivedId], references: [id])
   sent       user     @relation("sender", fields: [sentId], references: [id])

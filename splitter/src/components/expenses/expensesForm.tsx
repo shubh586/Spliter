@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@/app/types";
 import GroupSelector from "./GroupSelector";
 import { ParticipantSelector } from "./ParticipantSelector";
-import type { newSplits, SelectedGroupMember, Splits } from "../../app/types";
+import type { newSplits, participant, SelectedGroupMember, Splits } from "../../app/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import SplitSelector from "./SplitsSelector";
 import { toast } from "sonner";
@@ -43,21 +43,15 @@ const expenseSchema = z.object({
 const ExpensesForm = ({
   type,
   currentUser,
-  onSuccess
+  onSuccess,
 }: {
   type: string;
-    currentUser: User;
-  onSuccess: (id: string|undefined) => Promise<boolean>
+  currentUser: User;
+  onSuccess: (id: string | undefined) => Promise<boolean>;
 }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [participants, setParticipants] = useState<
-    | {
-        id: string;
-        name: string;
-        email: string;
-        role: string;
-        imageUrl: string | "";
-      }[]
+    | participant[]
     | []
   >([]);
   const [selectedGroup, setSelectedGroup] =
@@ -87,7 +81,7 @@ const ExpensesForm = ({
   const paidByUserId = watch("paidBy");
 
   if (!currentUser) return <div>Expenses cant be added</div>;
-  const onSubmit =  async (data: z.infer<typeof expenseSchema>) => {
+  const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
     try {
       const amount = parseFloat(data.amount);
       const formattedSplits = splits.map((split) => ({
@@ -122,7 +116,6 @@ const ExpensesForm = ({
           groupId,
         });
 
-   
         const rdata: string = reponse.data.expenseId;
         if (rdata) {
           console.log("sucess expenses created");
@@ -137,7 +130,7 @@ const ExpensesForm = ({
 
       const otherParticipant = participants.find(
         (p) => p.id !== currentUser.id
-      );//return only the first match
+      ); //return only the first match
       const otherUserId = otherParticipant?.id;
 
       if (onSuccess) onSuccess(type === "individual" ? otherUserId : groupId);
@@ -240,7 +233,11 @@ const ExpensesForm = ({
             <ParticipantSelector
               currentUser={currentUser}
               participants={participants}
-              onParticipantsChange={setParticipants}
+              onChange={(user: participant[]) => {
+                if (user) {
+                  setParticipants(user);
+                }
+              }}
             />
             {participants.length <= 1 && (
               <p className="text-xs text-amber-600">

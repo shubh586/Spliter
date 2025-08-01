@@ -148,7 +148,7 @@ const Expense = ({
                           split.userId === otherPersonId));
 
                     if (!shouldShow) return null;
-
+                    if (!splitUser) return null;
                     return (
                       <Badge
                         key={idx}
@@ -160,7 +160,7 @@ const Expense = ({
                         className="flex items-center gap-1"
                       >
                         <Avatar className="h-4 w-4">
-                          <AvatarImage src={splitUser.imageUrl} />
+                          <AvatarImage src={splitUser.imageUrl===null?"":`${splitUser.imageUrl}`} />
                           <AvatarFallback>
                             {splitUser.name?.charAt(0) || "?"}
                           </AvatarFallback>

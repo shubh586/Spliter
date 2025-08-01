@@ -9,42 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Users } from "lucide-react";
 import SettlementForm from "@/components/settlements/settlementform";
 import useServerhook from "../../../../../../hooks/useServerhook";
-import type { User } from "@/app/types";
+import type { User,UserSettlementData,GroupSettlementData } from "@/app/types";
 import axios from "axios";
-// Types matching our Prisma backend
-type UserBalance = {
-  type: "user";
-  OtherUser: {
-    userId: string;
-    name: string;
-    email: string;
-    imageUrl: string | null;
-  };
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-};
 
-type Member = {
-  userId: string;
-  name: string;
-  imageUrl: string | null;
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-};
 
-type GroupBalance = {
-  type: "group";
-  group: {
-    id: string;
-    name: string;
-    description: string | null;
-  };
-  balances: Member[];
-};
 
-type SettlementData = UserBalance | GroupBalance;
+
+
+
+type SettlementData = UserSettlementData| GroupSettlementData ;
 
 export default function SettlementPage() {
   const params = useParams();
@@ -161,8 +134,8 @@ export default function SettlementPage() {
         <h1 className="text-5xl gradient-title">Record a settlement</h1>
         <p className="text-muted-foreground mt-1">
           {type === "user"
-            ? `Settling up with ${(data as UserBalance)?.OtherUser?.name}`
-            : `Settling up in ${(data as GroupBalance)?.group?.name}`}
+            ? `Settling up with ${(data as UserSettlementData)?.OtherUser?.name}`
+            : `Settling up in ${(data as GroupSettlementData )?.group?.name}`}
         </p>
       </div>
 
@@ -172,10 +145,10 @@ export default function SettlementPage() {
             {type === "user" ? (
               <Avatar className="h-10 w-10">
                 <AvatarImage
-                  src={(data as UserBalance)?.OtherUser?.imageUrl || undefined}
+                  src={(data as UserSettlementData)?.OtherUser?.imageUrl || undefined}
                 />
                 <AvatarFallback>
-                  {(data as UserBalance)?.OtherUser?.name?.charAt(0) || "?"}
+                  {(data as UserSettlementData)?.OtherUser?.name?.charAt(0) || "?"}
                 </AvatarFallback>
               </Avatar>
             ) : (
@@ -185,8 +158,8 @@ export default function SettlementPage() {
             )}
             <CardTitle>
               {type === "user"
-                ? (data as UserBalance)?.OtherUser?.name
-                : (data as GroupBalance)?.group?.name}
+                ? (data as UserSettlementData)?.OtherUser?.name
+                : (data as GroupSettlementData )?.group?.name}
             </CardTitle>
           </div>
         </CardHeader>

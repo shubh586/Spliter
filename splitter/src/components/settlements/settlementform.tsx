@@ -11,52 +11,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import axios from "axios";
+import {
+  UserSettlementData,
+  GroupSettlementData,
+  settlementsArgs,
+} from "@/app/types";
 
-// Types for our settlement data (matching our Prisma backend)
-type UserBalance = {
-  type: "user";
-  OtherUser: {
-    userId: string;
-    name: string;
-    email: string;
-    imageUrl: string | null;
-  };
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-};
 
-type Member = {
-  userId: string;
-  name: string;
-  imageUrl: string | null;
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-};
-
-type GroupBalance = {
-  type: "group";
-  group: {
-    id: string;
-    name: string;
-    description: string | null;
-  };
-  balances: Member[];
-};
-
-type CreateArgs = {
-  amount: number;
-  note?: string;
-  paidByUserId: string;
-  receivedByUserId: string;
-  groupId?: string;
-};
 
 // Props for the component
 type SettlementFormProps = {
   entityType: "user" | "group";
-  entityData: UserBalance | GroupBalance;
+  entityData: UserSettlementData | GroupSettlementData;
   currentUser: {
     id: string;
     name: string;
@@ -104,36 +71,35 @@ export default function SettlementForm({
   const paymentType = watch("paymentType");
 
   // API call to create settlement
-  const createSettlement = async (data: CreateArgs) => {
-    const response = await fetch("/api/settlements", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to create settlement");
+  const createSettlement = async (datatri: settlementsArgs) => {
+    try {
+      const response = await axios.post(
+        "/api/settlements/createsettlementsdata",
+        datatri
+      );
+      const data = response.data
+      if (data) {
+        toast.success("Settlement is created successfully")
+      }
+    } catch (error) {
+      toast.error("Settlements creation Failed ")
+      console.log((error as Error)?.message);
     }
-
-    return response.json();
   };
 
   // single user settlement
   const handleUserSettlement = async (data: FormData) => {
-    const entityDataUser = entityData as UserBalance;
+    const entityDataUser = entityData as UserSettlementData;
     const amount = parseFloat(data.amount);
 
     try {
       // determine payer and receiver based on the selected payment type
-      const paidByUserId =
+      const paidBy =
         data.paymentType === "youPaid"
           ? currentUser.id
           : entityDataUser.OtherUser.userId;
 
-      const receivedByUserId =
+      const receivedBy =
         data.paymentType === "youPaid"
           ? entityDataUser.OtherUser.userId
           : currentUser.id;
@@ -141,8 +107,8 @@ export default function SettlementForm({
       await createSettlement({
         amount,
         note: data.note,
-        paidByUserId,
-        receivedByUserId,
+        paidBy,
+        receivedBy,
         // no groupId for user settlements
       });
 
@@ -163,7 +129,7 @@ export default function SettlementForm({
       return;
     }
 
-    const entityDataGroup = entityData as GroupBalance;
+    const entityDataGroup = entityData as GroupSettlementData;
     const amount = parseFloat(data.amount);
 
     try {
@@ -178,17 +144,17 @@ export default function SettlementForm({
       }
 
       // determine payer and receiver based on the selected payment type and balances
-      const paidByUserId =
+      const paidBy =
         data.paymentType === "youPaid" ? currentUser.id : selectedUser.userId;
 
-      const receivedByUserId =
+      const receivedBy =
         data.paymentType === "youPaid" ? selectedUser.userId : currentUser.id;
 
       await createSettlement({
         amount,
         note: data.note,
-        paidByUserId,
-        receivedByUserId,
+        paidBy,
+        receivedBy,
         groupId: entityDataGroup.group.id,
       });
 
@@ -215,7 +181,7 @@ export default function SettlementForm({
 
   // render the form for individual settlement
   if (entityType === "user") {
-    const entityDataUser = entityData as UserBalance;
+    const entityDataUser = entityData as UserSettlementData;
     const otherUser = entityDataUser.OtherUser;
     const netBalance = entityDataUser.netBalance;
 
@@ -329,7 +295,7 @@ export default function SettlementForm({
 
   // render form for group settlement
   if (entityType === "group") {
-    const entityDataGroup = entityData as GroupBalance;
+    const entityDataGroup = entityData as GroupSettlementData;
     const groupMembers = entityDataGroup.balances;
 
     return (

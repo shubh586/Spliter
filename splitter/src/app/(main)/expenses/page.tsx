@@ -44,7 +44,7 @@ const Expenses = () => {
                 <ExpensesForm
                   type={"individual"}
                   currentUser={currentUser}
-                  onSuccess={(id: string|undefined) => router.push("/contacts")}
+                  onSuccess={(id: string|undefined) => router.push(`/person/${id}`)}
                 />
               </TabsContent>
 
@@ -52,7 +52,7 @@ const Expenses = () => {
                 <ExpensesForm
                   type={"group"}
                   currentUser={currentUser}
-                  onSuccess={(id:string|undefined) => router.push("/contacts")}
+                  onSuccess={(id:string|undefined) => router.push(`/group/${id}`)}
                 />
               </TabsContent>
             </Tabs>

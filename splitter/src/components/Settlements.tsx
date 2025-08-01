@@ -13,12 +13,12 @@ const Settlements = ({
 }: {
   settlements: Settlement[];
   currentUser: User;
-  userLookupMap: { [key: string]: GroupMember } ;
+  userLookupMap: { [key: string]: GroupMember };
   isGroupExpense: boolean;
 }) => {
-  const getUserDatails = (userId: string): GroupMember => {
+  const getUserDatails = (userId: string): GroupMember | null => {
     const user = userLookupMap[userId];
-    return user;
+    return user || null;
   };
 
   if (!currentUser || settlements.length === 0) {
@@ -37,7 +37,10 @@ const Settlements = ({
     <div className="flex flex-col gap-4">
       {settlements.map((settlement) => {
         const payer = getUserDatails(settlement.sentId);
-        const receiver = getUserDatails(settlement.receivedId);
+ const receiver = getUserDatails(settlement.receivedId);
+        if (!payer || !receiver) {
+          return null;
+        }
         const isCurrentUserPayer: boolean = payer.id === currentUser.id;
         const isCurrentUserReceiver: boolean = receiver.id === currentUser.id;
 
@@ -67,12 +70,12 @@ const Settlements = ({
                       <span>
                         {format(new Date(settlement.createdAt), "MMM d, yyyy")}
                       </span>
-                      {/* {settlement.note && (
+                      {settlement.note && (
                         <>
                           <span>•</span>
                           <span>{settlement.note}</span>
                         </>
-                      )} */}
+                      )}
                     </div>
                   </div>
                 </div>

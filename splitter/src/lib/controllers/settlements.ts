@@ -1,54 +1,6 @@
 import prisma from "../prisma";
 import { getCurrentUser } from "./storeduser";
-
-type OtherUser ={
-  userId: string;
-  name: string;
-  email: string;
-  imageUrl: string | null;
-}
-
-type UserSettlementData ={
-  type: "user";
-  counterpart: OtherUser;
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-}
-
-type GroupMemberBalance ={
-  userId: string;
-  name: string;
-  imageUrl: string | null;
-  youAreOwed: number;
-  youOwe: number;
-  netBalance: number;
-}
-
-type GroupSettlementData ={
-  type: "group";
-  group: {
-    id: string;
-    name: string;
-    description: string | null;
-  };
-  balances: GroupMemberBalance[];
-}
-
-type settlementsArgs ={
-  amount: number; 
-  note?: string;
-  paidBy: string;
-  receivedBy: string;
-  groupId?: string; 
-  // relatedExpenseIds?: string[];
-}
-
-type settlementsType ={
-  entityType: string; 
-  entityId: string; 
-}
-
+import type { settlementsType,settlementsArgs,GroupSettlementData,GroupMemberBalance,UserSettlementData } from "@/app/types";
 export const createSettlement = async (
 
   args: settlementsArgs
@@ -178,7 +130,7 @@ export const getSettlementData = async (
 
     return {
       type: "user",
-      counterpart: {
+      OtherUser: {
         userId: other.id,
         name: other.name,
         email: other.email,

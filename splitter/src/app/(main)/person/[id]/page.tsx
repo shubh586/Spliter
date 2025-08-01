@@ -19,12 +19,16 @@ export default function PersonExpensesPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("expenses");
   const { data: currentUser, isLoading: gettinguser } = useServerhook<User>(
-    "/app/api/user/currentuser"
+    "/api/user/currentuser"
+  );
+  const { data, isLoading } = useServerhook<oneToOneExpenses>(
+    "/api/person/getpertoperexpenses",
+    "POST",
+    {
+      userId: params.id,
+    }
   );
 
-   const { data, isLoading } = useServerhook<oneToOneExpenses>(
-     "/app/api/person/getpertoperexpenses"
-   );
   if (gettinguser || isLoading) {
     return (
       <div className="container mx-auto py-12">
@@ -32,14 +36,13 @@ export default function PersonExpensesPage() {
       </div>
     );
   }
-  
+
   if (!currentUser) {
     return <div className="py-12">currentuser not found</div>;
   }
   if (!data) {
-    return <div className="py-12">currentuser not found</div>;
+    return <div className="py-12">currentuser data found</div>;
   }
-
 
   const otherUser = data?.otherUser;
   const expenses = data?.expenses || [];
@@ -62,7 +65,9 @@ export default function PersonExpensesPage() {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={otherUser.imageUrl===null?"":otherUser.imageUrl} />
+              <AvatarImage
+                src={otherUser.imageUrl === null ? "" : otherUser.imageUrl}
+              />
               <AvatarFallback>
                 {otherUser?.name?.charAt(0) || "?"}
               </AvatarFallback>
@@ -81,7 +86,7 @@ export default function PersonExpensesPage() {
               </Link>
             </Button>
             <Button asChild>
-              <Link href={`/expenses/new`}>
+              <Link href={`/expenses`}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add expense
               </Link>
@@ -141,7 +146,16 @@ export default function PersonExpensesPage() {
             expenses={expenses}
             showOtherPerson={false}
             otherPersonId={`${params.id}`}
-            userLookupMap={{ [otherUser.id]: otherUser }}
+            userLookupMap={{
+              [currentUser.id]: {
+                id: currentUser.id,
+                email: currentUser.email,
+                name: currentUser.name,
+                imageUrl: currentUser.imageUrl,
+                role: "member",
+              },
+              [otherUser.id]: otherUser,
+            }}
             currentUser={currentUser}
             isGroupExpense={false}
           />
@@ -151,7 +165,16 @@ export default function PersonExpensesPage() {
           <Settlements
             currentUser={currentUser}
             settlements={settlements}
-            userLookupMap={{ [otherUser.id]: otherUser }}
+            userLookupMap={{
+              [currentUser.id]: {
+                id: currentUser.id,
+                email: currentUser.email,
+                name: currentUser.name,
+                imageUrl: currentUser.imageUrl,
+                role: "member",
+              },
+              [otherUser.id]: otherUser,
+            }}
             isGroupExpense={false}
           />
         </TabsContent>

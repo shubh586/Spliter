@@ -1,5 +1,5 @@
-"use client"
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X, UserPlus } from "lucide-react";
@@ -18,19 +18,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useServerhook from "../../../hooks/useServerhook";
+import { participant } from "@/app/types";
 
 export function ParticipantSelector({
   participants,
-  onParticipantsChange,
+  onChange,
   currentUser,
 }: {
-  participants: {
-    id: string;
-    email: string;
-    name: string;
-    imageUrl: string | null;
-  }[];
-  onParticipantsChange;
+  participants: participant[];
+  onChange: (user: participant[]) => void;
+
   currentUser: {
     id: string;
     email: string;
@@ -41,31 +38,41 @@ export function ParticipantSelector({
 }) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: searchResults, isLoading } = useServerhook<Contact[]>(
-    "/api/user/searchAllContacts",
-    "POST",
-    { query: searchQuery }
-  );
+  const { data: searchResults, isLoading } = useServerhook<
+    {
+      id: string;
+      name: string;
+      email: string;
+      imageUrl: string | null;
+    }[]
+  >("/api/user/searchAllContacts", "POST", { query: searchQuery });
 
-  const addParticipant = (user) => {
-    // Check if already added
+  useEffect(() => {
+    if (currentUser) {
+      const user = {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+        role: "",
+        imageUrl: currentUser.imageUrl,
+      };
+      addParticipant(user);
+    }
+  }, [currentUser]);
+  const addParticipant = (user: participant) => {
     if (participants.some((p) => p.id === user.id)) {
       return;
     }
-
-    onParticipantsChange([...participants, user]);
+    onChange([...participants, user]);
     setOpen(false);
     setSearchQuery("");
   };
 
-  // Remove a participant
   const removeParticipant = (userId: string) => {
-    // Don't allow removing yourself
-    if (userId === currentUser._id) {
+    if (userId === currentUser.id) {
       return;
     }
-
-    onParticipantsChange(participants.filter((p) => p.id !== userId));
+    onChange(participants.filter((p) => p.id !== userId));
   };
 
   return (
@@ -78,17 +85,21 @@ export function ParticipantSelector({
             className="flex items-center gap-2 px-3 py-2"
           >
             <Avatar className="h-5 w-5">
-              <AvatarImage src={participant.imageUrl} />
+              <AvatarImage
+                src={
+                  participant.imageUrl === null ? "" : `${participant.imageUrl}`
+                }
+              />
               <AvatarFallback>
                 {participant.name?.charAt(0) || "?"}
               </AvatarFallback>
             </Avatar>
             <span>
-              {participant.id === currentUser?._id
+              {participant.id === currentUser?.id
                 ? "You"
                 : participant.name || participant.email}
             </span>
-            {participant.id !== currentUser?._id && (
+            {participant.id !== currentUser?.id && (
               <button
                 type="button"
                 onClick={() => removeParticipant(participant.id)}
@@ -141,11 +152,15 @@ export function ParticipantSelector({
                       <CommandItem
                         key={user.id}
                         value={user.name + user.email}
-                        onSelect={() => addParticipant(user)}
+                        onSelect={() => addParticipant({ ...user, role: "" })}
                       >
                         <div className="flex items-center gap-2">
                           <Avatar className="h-6 w-6">
-                            <AvatarImage src={user.imageUrl} />
+                            <AvatarImage
+                              src={
+                                user.imageUrl === null ? "" : `${user.imageUrl}`
+                              }
+                            />
                             <AvatarFallback>
                               {user.name?.charAt(0) || "?"}
                             </AvatarFallback>
