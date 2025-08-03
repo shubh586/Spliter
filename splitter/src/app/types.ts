@@ -181,6 +181,20 @@ export type UserSettlementData = {
   youOwe: number;
   netBalance: number;
 };
+
+
+export type getUserGroupList = {
+  id: string;
+  name: string;
+  members: {
+    id: string;
+  }[];
+  balance: number;
+}[];
+export type monthlySpendingList=  {
+    month: number;
+    total: number;
+  }[]
 // type UserBalance = {
 //   type: "user";
 //   OtherUser: {
@@ -213,5 +227,20 @@ export type GroupSettlementData = {
   balances: GroupMemberBalance[];
 };
 
+export type UserBalanceEntry = {
+  userId: string;
+  name: string;
+  imageUrl: string | null;
+  amount: number;
+};
 
+export type BalanceSummary = {
+  youOwe: number;
+  youAreOwed: number;
+  totalBalance: number;
+  oweDetails: {
+    youOwe: UserBalanceEntry[];
+    youAreOwedBy: UserBalanceEntry[];
+  };
+};
 
