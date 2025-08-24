@@ -1,10 +1,9 @@
-
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
-
+import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -18,17 +17,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Analytics></Analytics>
       <head>
         <link rel="icon" href="/logos/logo-s.png" sizes="any" />
       </head>
       <body className={inter.className}>
-        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-            <Header />
-            <main className=" min-h-screen ">
-              <Toaster />
+        <ClerkProvider
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        >
+          <Header />
+          <main className=" min-h-screen ">
+            <Toaster />
 
-              {children}
-            </main>
+            {children}
+          </main>
         </ClerkProvider>
       </body>
     </html>
