@@ -1,6 +1,6 @@
-"use client"
-import { useState, useEffect } from "react"
-import { BarLoader } from "react-spinners"
+"use client";
+import { useState, useEffect, Suspense } from "react";
+import { BarLoader } from "react-spinners";
 import useServerhook from "../../../../hooks/useServerhook";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -9,8 +9,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, Users, User } from "lucide-react";
 import CreateGroupModal from "@/components/contacts/CreateGroupModal";
-import type { User1,ContactData, Group1 } from "@/app/types";
-const Page = () => {
+import type { User1, ContactData, Group1 } from "@/app/types";
+const ContactsPage = () => {
   const [isGroupModalOpen, setIsGroupModalOpen] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,20 +19,16 @@ const Page = () => {
     "/api/contacts/getAllcontacts"
   );
 
-
   useEffect(() => {
     const groupParam = searchParams.get("createGroup");
     if (groupParam === "true") {
       setIsGroupModalOpen(true);
-      const path = new URL(window.location.href)
-      path.searchParams.delete("createGroup")
-      router.replace(path.pathname+path.search)
-      
+      const path = new URL(window.location.href);
+      path.searchParams.delete("createGroup");
+      router.replace(path.pathname + path.search);
     }
-  },[searchParams,router])
+  }, [searchParams, router]);
 
-
-  
   if (isLoading) {
     return (
       <div className="container mx-auto py-12">
@@ -139,12 +135,23 @@ const Page = () => {
       <CreateGroupModal
         isOpen={isGroupModalOpen}
         onClose={() => setIsGroupModalOpen(false)}
-        onSuccess={(groupId:string) => {
+        onSuccess={(groupId: string) => {
           router.push(`/groups/${groupId}`);
         }}
       />
     </div>
   );
+};
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto py-12">
+          <BarLoader width={"100%"} color="#36d7b7" />
+        </div>
+      }
+    >
+      <ContactsPage />
+    </Suspense>
+  );
 }
-
-export default Page

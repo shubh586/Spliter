@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   // Find existing Shubham user by ID
   const shubham = await prisma.user.findUnique({
-    where: { id: "266f2cc6-4f42-496e-a48b-398a40344873" },
+    where: { id: "c2c3bab1-6b30-43c3-8b02-8dbd7f4ccaf8" },
   });
 
   if (!shubham) {

@@ -55,7 +55,7 @@ export default function SplitSelector({
     setTotalAmount(newSplits.reduce((sum, s) => sum + s.amount, 0));
     setTotalPercentage(newSplits.reduce((sum, s) => sum + s.percentage, 0));
     onSplitsChange(newSplits);
-  }, [type, amount, participants, paidBy]);
+  }, [type, amount, participants, paidBy, onSplitsChange]);
 
   const updatePercentageSplit = (userId: string, newPercentage: number) => {
     const updated = splits.map((s) =>

@@ -29,7 +29,7 @@ export const CategorySelector = ({
         onChange(defaultCategory.id);
       }
     }
-  }, []);
+  }, [onChange,selectedCategory,categories]);
 
   if (!categories || categories.length === 0) {
     return <div>No categories available</div>;

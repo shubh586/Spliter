@@ -52,7 +52,6 @@ export default function SettlementForm({
   currentUser,
   onSuccess,
 }: SettlementFormProps) {
-
   const {
     register,
     handleSubmit,
@@ -68,6 +67,7 @@ export default function SettlementForm({
   });
 
   // Get selected payment direction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const paymentType = watch("paymentType");
 
   // API call to create settlement
@@ -77,12 +77,12 @@ export default function SettlementForm({
         "/api/settlements/createsettlementsdata",
         datatri
       );
-      const data = response.data
+      const data = response.data;
       if (data) {
-        toast.success("Settlement is created successfully")
+        toast.success("Settlement is created successfully");
       }
     } catch (error) {
-      toast.error("Settlements creation Failed ")
+      toast.error("Settlements creation Failed ");
       console.log((error as Error)?.message);
     }
   };
@@ -306,8 +306,8 @@ export default function SettlementForm({
           <div className="space-y-2">
             {groupMembers.map((member) => {
               const isSelected = selectedGroupMemberId === member.userId;
-              const isOwing = member.netBalance < 0; 
-              const isOwed = member.netBalance > 0; 
+              const isOwing = member.netBalance < 0;
+              const isOwed = member.netBalance > 0;
 
               return (
                 <div

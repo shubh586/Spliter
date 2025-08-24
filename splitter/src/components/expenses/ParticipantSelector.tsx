@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X, UserPlus } from "lucide-react";
@@ -46,7 +46,26 @@ export function ParticipantSelector({
       imageUrl: string | null;
     }[]
   >("/api/user/searchAllContacts", "POST", { query: searchQuery });
-
+  const addParticipant = useCallback(
+    (user: participant) => {
+      if (participants.some((p) => p.id === user.id)) {
+        return;
+      }
+      onChange([...participants, user]);
+      setOpen(false);
+      setSearchQuery("");
+    },
+    [participants, onChange]
+  );
+  const removeParticipant = useCallback(
+    (userId: string) => {
+      if (userId === currentUser.id) {
+        return;
+      }
+      onChange(participants.filter((p) => p.id !== userId));
+    },
+    [participants, onChange, currentUser.id]
+  );
   useEffect(() => {
     if (currentUser) {
       const user = {
@@ -58,22 +77,7 @@ export function ParticipantSelector({
       };
       addParticipant(user);
     }
-  }, [currentUser]);
-  const addParticipant = (user: participant) => {
-    if (participants.some((p) => p.id === user.id)) {
-      return;
-    }
-    onChange([...participants, user]);
-    setOpen(false);
-    setSearchQuery("");
-  };
-
-  const removeParticipant = (userId: string) => {
-    if (userId === currentUser.id) {
-      return;
-    }
-    onChange(participants.filter((p) => p.id !== userId));
-  };
+  }, [currentUser,addParticipant]);
 
   return (
     <div className="space-y-3">

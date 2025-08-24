@@ -10,7 +10,7 @@ export type participant = {
   id: string;
   name: string;
   email: string;
-  role: string|"";
+  role: string | "";
   imageUrl: string | "" | null;
 };
 export type User = {
@@ -46,7 +46,7 @@ export type Settlement = {
   groupId: string | null | undefined;
   sentId: string;
   receivedId: string;
-  note:string|null
+  note: string | null;
 };
 export type Balance = GroupMember & {
   owesTo: {
@@ -136,7 +136,7 @@ export type newSplits = {
   userId: string;
   name: string;
   email: string;
-  imageUrl: string | ""|null;
+  imageUrl: string | "" | null;
   amount: number;
   percentage: number;
   paid: boolean;
@@ -182,7 +182,6 @@ export type UserSettlementData = {
   netBalance: number;
 };
 
-
 export type getUserGroupList = {
   id: string;
   name: string;
@@ -191,10 +190,10 @@ export type getUserGroupList = {
   }[];
   balance: number;
 }[];
-export type monthlySpendingList=  {
-    month: number;
-    total: number;
-  }[]
+export type monthlySpendingList = {
+  month: number;
+  total: number;
+}[];
 // type UserBalance = {
 //   type: "user";
 //   OtherUser: {
@@ -244,3 +243,28 @@ export type BalanceSummary = {
   };
 };
 
+
+
+
+export type DebtInfo= {
+  userId: string;
+  name: string;
+  amount: number;
+  since: number;
+}
+
+export type UserWithDebts ={
+  id: string;
+  name: string;
+  email: string;
+  debts: DebtInfo[];
+}
+
+export type UserExpenseData ={
+  description: string;
+  category: string;
+  date: Date;
+  amount: number;
+  isPayer: boolean;
+  isGroup: boolean;
+}

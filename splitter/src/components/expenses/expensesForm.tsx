@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Calendar } from "../ui/calendar";
@@ -79,7 +79,38 @@ const ExpensesForm = ({
   });
   const amountValue = watch("amount");
   const paidByUserId = watch("paidBy");
+const handleParticipantsChange = useCallback(
+  (users: participant[]) => {
+    if (users) {
+      setParticipants(users);
+    }
+  },
+  [setParticipants] 
+);
 
+const onSplitsChange = useCallback(
+  (newSplit: newSplits[]) => {
+    const splits: Splits[] = newSplit.map((split) => ({
+      userId: split.userId,
+      amount: split.amount,
+    }));
+    setSplits(splits);
+  },
+  [setSplits]
+);
+
+
+  const onChange = useCallback((categoryId: string) => {
+    if (categoryId) {
+      setValue("category", categoryId);
+    }
+  }, [setValue]);
+
+  const selecttDate = useCallback((date:Date|undefined) => {
+    setDate(date);
+    if (date) setValue("date", date);
+  }, [setValue]);
+  
   if (!currentUser) return <div>Expenses cant be added</div>;
   const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
     try {
@@ -139,6 +170,8 @@ const ExpensesForm = ({
     }
   };
 
+
+
   return (
     <form action="" onSubmit={handleSubmit(onSubmit)}>
       {/* why */}
@@ -168,14 +201,7 @@ const ExpensesForm = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
             <Label htmlFor="category">Category</Label>
-            <CategorySelector
-              categories={categories}
-              onChange={(categoryId: string) => {
-                if (categoryId) {
-                  setValue("category", categoryId);
-                }
-              }}
-            />
+            <CategorySelector categories={categories} onChange={onChange} />
           </div>
           <div className="space-y-4">
             <Label htmlFor="date">Date</Label>
@@ -193,10 +219,7 @@ const ExpensesForm = ({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(date) => {
-                    setDate(date);
-                    if (date) setValue("date", date);
-                  }}
+                  onSelect={selecttDate}
                   initialFocus
                   className="rounded-lg border"
                 />
@@ -233,11 +256,7 @@ const ExpensesForm = ({
             <ParticipantSelector
               currentUser={currentUser}
               participants={participants}
-              onChange={(user: participant[]) => {
-                if (user) {
-                  setParticipants(user);
-                }
-              }}
+              onChange={handleParticipantsChange}
             />
             {participants.length <= 1 && (
               <p className="text-xs text-amber-600">
@@ -295,13 +314,7 @@ const ExpensesForm = ({
                 amount={parseFloat(amountValue) || 0}
                 participants={participants}
                 paidBy={paidByUserId}
-                onSplitsChange={(newSplit: newSplits[]) => {
-                  const splits: Splits[] = newSplit.map((split) => ({
-                    userId: split.userId,
-                    amount: split.amount,
-                  }));
-                  setSplits(splits);
-                }} // Use setSplits directly
+                onSplitsChange={onSplitsChange} // Use setSplits directly
               />
             </TabsContent>
             <TabsContent value="percentage" className="pt-4">
@@ -313,13 +326,7 @@ const ExpensesForm = ({
                 amount={parseFloat(amountValue) || 0}
                 participants={participants}
                 paidBy={paidByUserId}
-                onSplitsChange={(newSplit: newSplits[]) => {
-                  const splits: Splits[] = newSplit.map((split) => ({
-                    userId: split.userId,
-                    amount: split.amount,
-                  }));
-                  setSplits(splits);
-                }} // Use setSplits directly
+                onSplitsChange={onSplitsChange} // Use setSplits directly
               />
             </TabsContent>
             <TabsContent value="exact" className="pt-4">
@@ -331,13 +338,7 @@ const ExpensesForm = ({
                 amount={parseFloat(amountValue) || 0}
                 participants={participants}
                 paidBy={paidByUserId}
-                onSplitsChange={(newSplit: newSplits[]) => {
-                  const splits: Splits[] = newSplit.map((split) => ({
-                    userId: split.userId,
-                    amount: split.amount,
-                  }));
-                  setSplits(splits);
-                }} // Use setSplits directly
+                onSplitsChange={onSplitsChange} // Use setSplits directly
               />
             </TabsContent>
           </Tabs>
