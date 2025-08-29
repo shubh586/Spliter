@@ -1,11 +1,12 @@
 import { BalanceSummary, getUserGroupList, monthlySpendingList, UserBalanceEntry } from "@/app/types";
 import { PrismaClient } from "@prisma/client";
+import { getCurrentUser } from "./storeduser";
 const prisma = new PrismaClient();
-
-
 
 //get user balances
 export async function getUserBalances(userId: string): Promise<BalanceSummary> {
+  const me = await getCurrentUser();
+  if (!me || me.id !== userId) throw new Error("Invalid user");
   const expenses = await prisma.expenses.findMany({
     where: {
       groupId: null,
@@ -84,7 +85,8 @@ export async function getUserBalances(userId: string): Promise<BalanceSummary> {
 export async function getTotalSpent(userId: string): Promise<number> {
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1);
-
+  const me = await getCurrentUser();
+  if (!me || me.id !== userId) throw new Error("Invalid user");
   const expenses = await prisma.expenses.findMany({
     where: {
       date: { gte: startOfYear },
@@ -110,6 +112,8 @@ export async function getTotalSpent(userId: string): Promise<number> {
 export async function getMonthlySpending(
   userId: string
 ): Promise<monthlySpendingList> {
+   const me = await getCurrentUser();
+   if (!me || me.id !== userId) throw new Error("Invalid user");
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1);
 
@@ -150,6 +154,8 @@ export async function getMonthlySpending(
 
 // get user groups with balances
 export async function getUserGroups(userId: string): Promise<getUserGroupList> {
+  const me = await getCurrentUser();
+  if (!me || me.id !== userId) throw new Error("Invalid user");
   const userGroups = await prisma.group.findMany({
     where: {
       members: {

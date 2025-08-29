@@ -36,6 +36,7 @@ import { Badge } from "@/components/ui/badge";
 import useServerhook from "../../../hooks/useServerhook";
 import { toast } from "sonner";
 import axios from "axios";
+import { useCurrentUser } from "../../../hooks/useCurrentUser";
 const groupSchema = z.object({
   name: z.string().min(1, "group name is required"),
   description: z.string().optional(),
@@ -67,7 +68,7 @@ const CreateGroupModal = ({
   const [selectedMembers, setSelectedMembers] = useState<Contact[] | []>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [commandOpen, setCommandOpen] = useState(false);
-  const { data, isLoading } = useServerhook<User>("/api/user/currentuser");
+  const { currentUser, isLoading } = useCurrentUser();
   const { data: contactList, isLoading: isSearching } = useServerhook<
     Contact[]
   >("/api/user/searchAllContacts", "POST", { query: searchQuery });
@@ -126,7 +127,7 @@ const CreateGroupModal = ({
   };
 
   if (isLoading) return <div></div>;
-  if (!data) return <div>currentUser not found</div>;
+  if (!currentUser) return <div>currentUser not found</div>;
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -161,15 +162,15 @@ const CreateGroupModal = ({
               <Label>Members</Label>
               <div className="space-y-2">
                 <div className="flex flex-wrap mb-2 gap-4">
-                  {data.name && (
+                  {currentUser && (
                     <Badge variant="secondary" className="px-3 py-1">
                       <Avatar className="h-5 w-5 mr-2">
-                        <AvatarImage src={data.imageUrl} />
+                        <AvatarImage src={currentUser.imageUrl} />
                         <AvatarFallback className="h-5 w-5  bg-green-400">
-                          {data.name?.charAt(0) || "?"}
+                          {currentUser.name?.charAt(0) || "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <span>{data.name} (You)</span>
+                      <span>{currentUser.name} (You)</span>
                     </Badge>
                   )}
                   {selectedMembers?.map((data) => (

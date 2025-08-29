@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import useServerhook from "../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../hooks/useCurrentUser";
 import { participant } from "@/app/types";
 
 export function ParticipantSelector({

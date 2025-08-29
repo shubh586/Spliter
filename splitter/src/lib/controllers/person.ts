@@ -4,7 +4,7 @@ import type { Expense } from "@/app/types";
 
 export const getExpensesBetweenUsers = async (userId: string) => {
   const me = await getCurrentUser();
-  if (!me || me.id === userId) throw new Error("Invalid user");
+  if (!me || me.id !== userId) throw new Error("Invalid user");
   const myPaidRaw = await prisma.expenses.findMany({
     where: {
       paidBy: me.id,

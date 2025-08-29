@@ -13,20 +13,18 @@ import {
 
 import { Expenses } from "@/components/dashboard/Expenses";
 import useServerhook from "../../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../../hooks/useCurrentUser";
 import {
   BalanceSummary,
   getUserGroupList,
   monthlySpendingList,
-  User,
 } from "@/app/types";
 import BalanceSummaryList from "@/components/dashboard/BalancyHistory";
 import { GroupList } from "@/components/dashboard/GroupList";
 import BarLoader from "react-spinners/BarLoader";
 
 const Dashboard = () => {
-  const { data: currentUser, isLoading: userLoading } = useServerhook<User>(
-    "/api/user/currentuser"
-  );
+  const { currentUser, isLoading: userLoading } = useCurrentUser();
 
   const { data: balances, isLoading: balancesLoading } =
     useServerhook<BalanceSummary>("/api/dashboard/getuserspending", "POST", {

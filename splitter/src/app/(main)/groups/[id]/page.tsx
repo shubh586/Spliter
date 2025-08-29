@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useServerhook from "../../../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../../../hooks/useCurrentUser";
 import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { BarLoader } from "react-spinners";
@@ -15,9 +16,7 @@ import Settlements from "@/components/Settlements";
 const Page = () => {
   const [activeTab, setActiveTab] = useState<string>("expenses");
   const params = useParams();
-  const { data: currentUser, isLoading: getingUser } = useServerhook<User>(
-    "/api/user/currentuser"
-  );
+  const { currentUser, isLoading: getingUser } = useCurrentUser();
 
   // const router = useRouter();
   const { data, isLoading } = useServerhook<GroupExpenseData>(

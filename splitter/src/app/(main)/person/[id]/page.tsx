@@ -12,15 +12,14 @@ import { PlusCircle, ArrowLeftRight, ArrowLeft } from "lucide-react";
 
 import Settlements from "@/components/Settlements";
 import useServerhook from "../../../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../../../hooks/useCurrentUser";
 import { oneToOneExpenses, User } from "@/app/types";
 import Expense from "@/components/Expense";
 export default function PersonExpensesPage() {
   const params = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("expenses");
-  const { data: currentUser, isLoading: gettinguser } = useServerhook<User>(
-    "/api/user/currentuser"
-  );
+  const { currentUser, isLoading: gettinguser } = useCurrentUser();
   const { data, isLoading } = useServerhook<oneToOneExpenses>(
     "/api/person/getpertoperexpenses",
     "POST",

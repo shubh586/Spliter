@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Users } from "lucide-react";
 import SettlementForm from "@/components/settlements/settlementform";
-import useServerhook from "../../../../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../../../../hooks/useCurrentUser";
 import type { User,UserSettlementData,GroupSettlementData } from "@/app/types";
 import axios from "axios";
 
@@ -31,10 +31,10 @@ export default function SettlementPage() {
 
   // Fetch current user
   const {
-    data: currentUser,
+    currentUser,
     isLoading: searching,
     error: isError,
-  } = useServerhook<User>("/api/user/currentuser");
+  } = useCurrentUser();
 
   // Fetch settlement data
   useEffect(() => {

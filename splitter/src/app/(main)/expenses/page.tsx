@@ -4,13 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExpensesForm from "@/components/expenses/expensesForm";
 import { BarLoader } from "react-spinners";
-import useServerhook from "../../../../hooks/useServerhook";
+import { useCurrentUser } from "../../../../hooks/useCurrentUser";
 import { User } from "../../types";
 import router from "next/router";
 const Expenses = () => {
-  const { data: currentUser, isLoading } = useServerhook<User | null>(
-    "/api/user/currentuser"
-  );
+  const { currentUser, isLoading } = useCurrentUser();
   if (isLoading) {
     return <BarLoader width={"100%"} color="#36d7b7" />;
   }
