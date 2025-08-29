@@ -154,13 +154,13 @@ const Dashboard = () => {
         </Card>
       </div>
       {/* main content */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4">
         {/*  left */}
         <div className="col-span-2 h-auto">
           <Expenses monthlySpending={monthlySpending??[]} totalSpent={totalSpent??0} />
         </div>
         {/*right has 2 div of cards */}
-        <div className="grid grid-rows-1 gap-4">
+        <div className="space-y-4 w-full">
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">

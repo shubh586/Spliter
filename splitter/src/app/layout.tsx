@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
+import ScrollToTop from "@/components/ScrolltoTop";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -28,8 +29,7 @@ export default function RootLayout({
           <Header />
           <main className=" min-h-screen ">
             <Toaster />
-
-            {children}
+            <ScrollToTop/>{children}
           </main>
         </ClerkProvider>
       </body>
