@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useServerhook from "../../../../../hooks/useServerhook";
-import { useCurrentUser } from "../../../../../hooks/useCurrentUser";
+import  useCurrentUser from "../../../../../hooks/useCurrentUser";
 import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { BarLoader } from "react-spinners";
-import { GroupExpenseData, User } from "../../../types";
+import { GroupExpenseData } from "../../../types";
 import Members from "@/components/groups/Members";
 import Groupbalances from "@/components/groups/Groupbalances";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";

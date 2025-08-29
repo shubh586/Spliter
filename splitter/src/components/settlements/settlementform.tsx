@@ -20,7 +20,6 @@ import {
 
 
 
-// Props for the component
 type SettlementFormProps = {
   entityType: "user" | "group";
   entityData: UserSettlementData | GroupSettlementData;

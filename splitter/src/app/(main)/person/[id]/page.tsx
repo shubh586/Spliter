@@ -12,8 +12,8 @@ import { PlusCircle, ArrowLeftRight, ArrowLeft } from "lucide-react";
 
 import Settlements from "@/components/Settlements";
 import useServerhook from "../../../../../hooks/useServerhook";
-import { useCurrentUser } from "../../../../../hooks/useCurrentUser";
-import { oneToOneExpenses, User } from "@/app/types";
+import  useCurrentUser  from "../../../../../hooks/useCurrentUser";
+import { oneToOneExpenses } from "@/app/types";
 import Expense from "@/components/Expense";
 export default function PersonExpensesPage() {
   const params = useParams();

@@ -4,8 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExpensesForm from "@/components/expenses/expensesForm";
 import { BarLoader } from "react-spinners";
-import { useCurrentUser } from "../../../../hooks/useCurrentUser";
-import { User } from "../../types";
+import useCurrentUser  from "../../../../hooks/useCurrentUser";
 import router from "next/router";
 const Expenses = () => {
   const { currentUser, isLoading } = useCurrentUser();

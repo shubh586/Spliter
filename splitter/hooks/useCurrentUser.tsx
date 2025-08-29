@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useUserStore } from '@/lib/store/userStore';
 import { User } from '@/app/types';
 
-export const useCurrentUser = () => {
+ const useCurrentUser = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { currentUser, isLoading, error, setCurrentUser, setLoading, setError } = useUserStore();
 
@@ -52,3 +52,4 @@ export const useCurrentUser = () => {
     isAuthenticated: !!clerkUser && !!currentUser,
   };
 }; 
+export default useCurrentUser;

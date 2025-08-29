@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Users } from "lucide-react";
 import SettlementForm from "@/components/settlements/settlementform";
-import { useCurrentUser } from "../../../../../../hooks/useCurrentUser";
-import type { User,UserSettlementData,GroupSettlementData } from "@/app/types";
+import  useCurrentUser  from "../../../../../../hooks/useCurrentUser";
+import type { UserSettlementData,GroupSettlementData } from "@/app/types";
 import axios from "axios";
 
 

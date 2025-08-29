@@ -36,12 +36,12 @@ import { Badge } from "@/components/ui/badge";
 import useServerhook from "../../../hooks/useServerhook";
 import { toast } from "sonner";
 import axios from "axios";
-import { useCurrentUser } from "../../../hooks/useCurrentUser";
+import useCurrentUser  from "../../../hooks/useCurrentUser";
 const groupSchema = z.object({
   name: z.string().min(1, "group name is required"),
   description: z.string().optional(),
 });
-import type { User } from "@/app/types";
+
 
 type Contact = {
   id: string;
