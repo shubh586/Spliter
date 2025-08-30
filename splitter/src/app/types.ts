@@ -28,6 +28,7 @@ export type Expense = {
   paidBy: string;
   groupId: string | null | undefined;
   splits: Split[];
+  category: string;
 };
 
 export type Split = {

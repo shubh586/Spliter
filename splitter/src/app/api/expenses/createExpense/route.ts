@@ -1,5 +1,3 @@
-
-
 import { NextResponse } from "next/server";
 import { createExpense } from "@/lib/controllers/expenses";
 

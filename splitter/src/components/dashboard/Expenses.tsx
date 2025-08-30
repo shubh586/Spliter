@@ -17,6 +17,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { monthlySpendingList } from "@/app/types";
+
 export const Expenses = ({
   monthlySpending,
   totalSpent,
@@ -39,54 +40,56 @@ export const Expenses = ({
     "Dec",
   ];
 
-  const chartData =
-    monthlySpending?.map((item) => {
-      const date = new Date(item.month);
-      return {
-        name: monthNames[date.getMonth()],
-        amount: item.total,
-      };
-    }) || [];
-
+  // Create a complete year array with all months
   const currentYear = new Date().getFullYear();
+  const completeYearData = Array.from({ length: 12 }, (_, index) => {
+    const monthStart = new Date(currentYear, index, 1).getTime();
+    const monthData = monthlySpending?.find(item => item.month === monthStart);
+    return {
+      name: monthNames[index],
+      amount: monthData?.total || 0,
+      month: index,
+    };
+  });
+
+  // Get current month spending
   const currentMonth = new Date().getMonth();
+  const currentMonthSpending = completeYearData[currentMonth]?.amount || 0;
+
   return (
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Total Balance</CardTitle>
+          <CardTitle>Spending Overview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            {/*  */}
+            {/* Current Month Spending */}
             <div className="bg-muted rounded-lg p-4">
               <p className="text-sm text-muted-foreground">Total this month</p>
               <h3 className="text-2xl font-bold mt-1">
-                {" "}
-                ${monthlySpending?.[currentMonth]?.total.toFixed(2) || "0.00"}
+                ${currentMonthSpending.toFixed(2)}
               </h3>
             </div>
-            {/*  */}
+            {/* Total Year Spending */}
             <div className="bg-muted rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">
-                ${totalSpent?.toFixed(2) || "0.00"}
-              </p>
-              <h3 className="text-2xl font-bold mt-1">${"0.00"}</h3>
+              <p className="text-sm text-muted-foreground">Total this year</p>
+              <h3 className="text-2xl font-bold mt-1">
+                ${totalSpent.toFixed(2)}
+              </h3>
             </div>
-            {/*  */}
           </div>
+          
+          {/* Spending Chart */}
           <div className="h-64 mt-6">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
+              <BarChart data={completeYearData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip
                   formatter={(value) => {
-                    const num =
-                      typeof value === "number"
-                        ? value
-                        : parseFloat(value as string);
+                    const num = typeof value === "number" ? value : parseFloat(value as string);
                     return [`$${num.toFixed(2)}`, "Amount"];
                   }}
                   labelFormatter={() => "Spending"}
@@ -98,7 +101,7 @@ export const Expenses = ({
         </CardContent>
         <CardFooter>
           <p className="text-xs sm:text-xl text-muted-foreground text-center mt-2">
-            Monthly spending for  {currentYear}
+            Monthly spending for {currentYear}
           </p>
         </CardFooter>
       </Card>

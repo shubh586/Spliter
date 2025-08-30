@@ -49,6 +49,15 @@ const Dashboard = () => {
         userId: currentUser?.id,
       }
     );
+
+  // console.log("Dashboard Data:", {
+  //   currentUser: currentUser?.id,
+  //   totalSpent,
+  //   monthlySpending,
+  //   balances,
+  //   groups
+  // });
+
   const isLoading =
     userLoading ||
     balancesLoading ||

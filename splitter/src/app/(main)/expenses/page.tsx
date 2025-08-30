@@ -5,8 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExpensesForm from "@/components/expenses/expensesForm";
 import { BarLoader } from "react-spinners";
 import useCurrentUser  from "../../../../hooks/useCurrentUser";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 const Expenses = () => {
+  const router = useRouter();
   const { currentUser, isLoading } = useCurrentUser();
   if (isLoading) {
     return <BarLoader width={"100%"} color="#36d7b7" />;
@@ -49,7 +50,7 @@ const Expenses = () => {
                 <ExpensesForm
                   type={"group"}
                   currentUser={currentUser}
-                  onSuccess={(id:string|undefined) => router.push(`/group/${id}`)}
+                  onSuccess={async(id:string|undefined) => await router.push(`/group/${id}`)}
                 />
               </TabsContent>
             </Tabs>

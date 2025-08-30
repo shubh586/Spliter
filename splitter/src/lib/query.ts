@@ -107,7 +107,7 @@ export async function getUsersWithOutstandingDebts(): Promise<UserWithDebts[]> {
       }
     }
 
-    console.log(user.name, debts);
+    //console.log(user.name, debts);
 
     if (debts.length > 0) {
       result.push({

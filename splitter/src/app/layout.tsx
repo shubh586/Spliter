@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
+import { UserProvider } from "@/components/providers/UserProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -25,12 +26,14 @@ export default function RootLayout({
         <ClerkProvider
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
         >
-          <Header />
+          <UserProvider>
+            <Header />
             <main className=" min-h-screen ">
               <Toaster />
 
               {children}
             </main>
+          </UserProvider>
         </ClerkProvider>
       </body>
     </html>

@@ -14,7 +14,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set: (partial: Partial<UserState> | ((state: UserState) => Partial<UserState>)) => void) => ({
       currentUser: null,
       isLoading: false,
       error: null,
@@ -25,7 +25,7 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'user-store',
-      partialize: (state) => ({ currentUser: state.currentUser }), // Only persist user data
+      partialize: (state: UserState) => ({ currentUser: state.currentUser }), // Only persist user data
     }
   )
 ); 

@@ -34,7 +34,7 @@ const GroupSelector = ({
         { groupId }
       );
       const groupMemberdetails = response.data;
-      console.log(groupMemberdetails);
+      //console.log(groupMemberdetails);
       onChange(groupMemberdetails);
     } catch (error) {
       console.log("error from getting groups members ,", error);

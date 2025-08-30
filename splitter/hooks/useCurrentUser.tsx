@@ -5,27 +5,21 @@ import axios from 'axios';
 import { useUserStore } from '@/lib/store/userStore';
 import { User } from '@/app/types';
 
- const useCurrentUser = () => {
+const useCurrentUser = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { currentUser, isLoading, error, setCurrentUser, setLoading, setError } = useUserStore();
 
   const fetchCurrentUser = useCallback(async () => {
-  
-    if (currentUser && clerkLoaded) {
-      return;
-    }
-
     if (!clerkLoaded) {
       return;
     }
-
-    
     if (!clerkUser) {
       setCurrentUser(null);
       return;
     }
-
-  
+    if (currentUser && currentUser.clerkId === clerkUser.id) {
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
@@ -51,5 +45,6 @@ import { User } from '@/app/types';
     error,
     isAuthenticated: !!clerkUser && !!currentUser,
   };
-}; 
+};
+
 export default useCurrentUser;

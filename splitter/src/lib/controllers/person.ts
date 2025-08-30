@@ -4,7 +4,19 @@ import type { Expense } from "@/app/types";
 
 export const getExpensesBetweenUsers = async (userId: string) => {
   const me = await getCurrentUser();
-  if (!me || me.id !== userId) throw new Error("Invalid user");
+  if (!me) throw new Error("Not authenticated");
+  
+  // Check if the other user exists
+  const otherUserExists = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true }
+  });
+  
+  if (!otherUserExists) throw new Error("Other user not found");
+  
+  // Ensure we're not trying to get expenses with ourselves
+  if (me.id === userId) throw new Error("Cannot get expenses with yourself");
+  
   const myPaidRaw = await prisma.expenses.findMany({
     where: {
       paidBy: me.id,

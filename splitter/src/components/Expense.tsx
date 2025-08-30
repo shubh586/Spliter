@@ -62,17 +62,17 @@ const Expense = ({
 
   return (
     <div className="flex flex-col gap-4">
-      {expenses.map((expense) => {
+      {expenses.map((expense, index) => {
         const payer = getUserDatails(expense.paidBy);
         const isCurrentUserPayer = expense.paidBy === currentUser.id;
-        const category = getCategoryById("other"); //expense.category
+        const category = getCategoryById(expense.category); //expense.category
         const CategoryIcon = getCategoryIcon(category.id);
         const showDeleteOption = canDeleteExpense(expense);
 
         return (
           <Card
             className="hover:bg-muted/30 transition-colors"
-            key={expense.id}
+            key={`${expense.id}-${index}-${expense.createdAt}`}
           >
             <CardContent>
               <div className="flex items-center justify-between flex-wrap gap-2 ">

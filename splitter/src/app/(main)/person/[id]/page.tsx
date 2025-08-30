@@ -28,6 +28,15 @@ export default function PersonExpensesPage() {
     }
   );
 
+  // Debug logging
+  // console.log("Person Page Debug:", {
+  //   params: params.id,
+  //   currentUser: currentUser?.id,
+  //   isLoading: gettinguser,
+  //   userError,
+  //   data: !!data
+  // });
+
   if (gettinguser || isLoading) {
     return (
       <div className="container mx-auto py-12">
@@ -37,10 +46,14 @@ export default function PersonExpensesPage() {
   }
 
   if (!currentUser) {
-    return <div className="py-12">currentuser not found</div>;
+    return (
+      <div className="py-12">
+        <p>Current user not found</p>
+      </div>
+    );
   }
   if (!data) {
-    return <div className="py-12">currentuser data found</div>;
+    return <div className="py-12">Expense data not found</div>;
   }
 
   const otherUser = data?.otherUser;

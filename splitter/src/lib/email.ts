@@ -20,7 +20,7 @@ export async function sendEmail(args: EmailArgs) {
       text: args.text,
     });
 
-    console.log("Email sent successfully:", result);
+   // console.log("Email sent successfully:", result);
     return { success: true, id: result.data?.id };
   } catch (error) {
     console.error("Failed to send email:", error);

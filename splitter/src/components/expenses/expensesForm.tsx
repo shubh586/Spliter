@@ -47,7 +47,7 @@ const ExpensesForm = ({
 }: {
   type: string;
   currentUser: User;
-  onSuccess: (id: string | undefined) => Promise<boolean>;
+  onSuccess: (id: string | undefined) => void;
 }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [participants, setParticipants] = useState<
@@ -111,14 +111,13 @@ const onSplitsChange = useCallback(
     if (date) setValue("date", date);
   }, [setValue]);
   
-  if (!currentUser) return <div>Expenses cant be added</div>;
+ 
   const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
     try {
       const amount = parseFloat(data.amount);
       const formattedSplits = splits.map((split) => ({
         userId: split.userId,
         amount: split.amount,
-        // paid: split.userId === data.paidBy,
       }));
 
       const totalSplitAmount = formattedSplits.reduce(
@@ -149,7 +148,7 @@ const onSplitsChange = useCallback(
 
         const rdata: string = reponse.data.expenseId;
         if (rdata) {
-          console.log("sucess expenses created");
+         // console.log("sucess expenses created");
         }
       } catch (error) {
         console.log(error);
@@ -163,14 +162,14 @@ const onSplitsChange = useCallback(
         (p) => p.id !== currentUser.id
       ); //return only the first match
       const otherUserId = otherParticipant?.id;
-
+      // if (onSuccess) this checks is it is provided or not
       if (onSuccess) onSuccess(type === "individual" ? otherUserId : groupId);
     } catch (error) {
       toast.error("Failed to create expense: " + (error as Error).message);
     }
   };
 
-
+ if (!currentUser) return <div>Expenses cant be added</div>;
 
   return (
     <form action="" onSubmit={handleSubmit(onSubmit)}>

@@ -87,6 +87,9 @@ export async function getTotalSpent(userId: string): Promise<number> {
   const startOfYear = new Date(currentYear, 0, 1);
   const me = await getCurrentUser();
   if (!me || me.id !== userId) throw new Error("Invalid user");
+  
+  //console.log("getTotalSpent called for userId:", userId, "from year:", startOfYear);
+  
   const expenses = await prisma.expenses.findMany({
     where: {
       date: { gte: startOfYear },
@@ -99,12 +102,18 @@ export async function getTotalSpent(userId: string): Promise<number> {
     },
   });
 
+  //console.log("Found expenses:", expenses.length, "for user:", userId);
+
   let total = 0;
   for (const e of expenses) {
     const mySplit = e.splits.find((s) => s.userId === userId);
-    if (mySplit) total += mySplit.amount;
+    if (mySplit) {
+      total += mySplit.amount;
+      //console.log("Added split amount:", mySplit.amount, "from expense:", e.description);
+    }
   }
 
+  //console.log("Total spent:", total);
   return total;
 }
 
@@ -117,6 +126,8 @@ export async function getMonthlySpending(
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1);
 
+  //console.log("getMonthlySpending called for userId:", userId, "from year:", startOfYear);
+
   const expenses = await prisma.expenses.findMany({
     where: {
       date: { gte: startOfYear },
@@ -126,11 +137,15 @@ export async function getMonthlySpending(
     },
     include: { splits: true },
   });
-  const monthlyTotals: Record<string, number> = {};
+  
+  //console.log("Found expenses for monthly spending:", expenses.length, "for user:", userId);
+  
+  // Initialize monthly totals with timestamps
+  const monthlyTotals: Record<number, number> = {};
 
   for (let i = 0; i < 12; i++) {
-    const key = `${currentYear}-${String(i + 1).padStart(2, "0")}`;
-    monthlyTotals[key] = 0;
+    const monthStart = new Date(currentYear, i, 1).getTime();
+    monthlyTotals[monthStart] = 0;
   }
 
   for (const expense of expenses) {
@@ -141,15 +156,21 @@ export async function getMonthlySpending(
       1
     ).getTime();
     const mySplit = expense.splits.find((s) => s.userId === userId);
-    if (mySplit) monthlyTotals[monthStart] += mySplit.amount;
+    if (mySplit) {
+      monthlyTotals[monthStart] += mySplit.amount;
+     // console.log("Added to month", new Date(monthStart).toLocaleDateString(), "amount:", mySplit.amount, "from expense:", expense.description);
+    }
   }
 
-  return Object.entries(monthlyTotals)
+  const result = Object.entries(monthlyTotals)
     .map(([month, total]) => ({
       month: parseInt(month),
       total,
     }))
     .sort((a, b) => a.month - b.month);
+
+  //console.log("Monthly spending result:", result);
+  return result;
 }
 
 // get user groups with balances

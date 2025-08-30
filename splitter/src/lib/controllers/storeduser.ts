@@ -48,7 +48,7 @@ export const getCurrentUser = async () => {
 export const searchALlContacts = async (query:string) => {
   const user = await currentUser();
   if (!user) throw new Error("Not authenticated")
-  if (query.length < 3) {
+  if (query.length < 2) {
     return [];
   }
   const nameResults = await prisma.user.findMany({
