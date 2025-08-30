@@ -29,7 +29,8 @@ export const getExpensesBetweenUsers = async (userId: string) => {
       createdAt: true,
       paidBy: true,
       groupId: true,
-      splits:true
+      splits: true,
+      category:true
     },
   });
 
@@ -47,6 +48,7 @@ export const getExpensesBetweenUsers = async (userId: string) => {
       paidBy: true,
       groupId: true,
       splits: true,
+      category:true,
       },
   });
 

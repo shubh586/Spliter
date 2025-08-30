@@ -9,6 +9,7 @@ interface UserProviderProps {
 
 export function UserProvider({ children }: UserProviderProps) {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { setCurrentUser, setLoading, setError } = useUserStore();
 
   useEffect(() => {
