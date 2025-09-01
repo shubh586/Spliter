@@ -64,12 +64,12 @@ export default function LandingPage() {
                   />
                 ))}
               </div>
-              <span className="font-semibold">500+ happy users</span>
+              {/* <span className="font-semibold">500+ happy users</span> */}
             </div>
             <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
-            <span className="font-semibold">✨ Free forever</span>
+            {/* <span className="font-semibold">✨ Free forever</span> */}
             <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
-            <span className="font-semibold">🇮🇳 Made in India</span>
+            {/* <span className="font-semibold">🇮🇳 Made in India</span> */}
           </div>
         </div>
       </section>

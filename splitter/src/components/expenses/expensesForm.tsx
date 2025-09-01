@@ -114,6 +114,13 @@ const onSplitsChange = useCallback(
  
   const onSubmit = async (data: z.infer<typeof expenseSchema>) => {
     try {
+      console.log("Expense Form Submit:", {
+        type,
+        groupId: data.groupId,
+        selectedGroup: selectedGroup?.id,
+        participants: participants.length
+      });
+
       const amount = parseFloat(data.amount);
       const formattedSplits = splits.map((split) => ({
         userId: split.userId,
@@ -134,6 +141,8 @@ const onSplitsChange = useCallback(
       }
       const groupId = type === "individual" ? undefined : data.groupId;
 
+  
+
       try {
         const reponse = await axios.post("/api/expenses/createExpense/", {
           description: data.description,
@@ -147,12 +156,19 @@ const onSplitsChange = useCallback(
         });
 
         const rdata: string = reponse.data.expenseId;
+        console.log("Expense created successfully:", {
+          expenseId: rdata,
+          groupId,
+          type
+        });
+
         if (rdata) {
          // console.log("sucess expenses created");
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error creating expense:", error);
         console.log("error in the create expenses");
+        return; 
       }
 
       toast.success("Expense created successfully!");
@@ -162,9 +178,9 @@ const onSplitsChange = useCallback(
         (p) => p.id !== currentUser.id
       ); //return only the first match
       const otherUserId = otherParticipant?.id;
-      // if (onSuccess) this checks is it is provided or not
       if (onSuccess) onSuccess(type === "individual" ? otherUserId : groupId);
     } catch (error) {
+      console.error("Form submission error:", error);
       toast.error("Failed to create expense: " + (error as Error).message);
     }
   };

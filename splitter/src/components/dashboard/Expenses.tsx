@@ -52,9 +52,18 @@ export const Expenses = ({
     };
   });
 
-  // Get current month spending
+
   const currentMonth = new Date().getMonth();
   const currentMonthSpending = completeYearData[currentMonth]?.amount || 0;
+
+
+  if (!Array.isArray(monthlySpending)) {
+    console.warn("monthlySpending is not an array:", monthlySpending);
+  }
+
+  if (typeof totalSpent !== "number") {
+    console.warn("totalSpent is not a number:", totalSpent);
+  }
 
   return (
     <div>
@@ -68,14 +77,14 @@ export const Expenses = ({
             <div className="bg-muted rounded-lg p-4">
               <p className="text-sm text-muted-foreground">Total this month</p>
               <h3 className="text-2xl font-bold mt-1">
-                ${currentMonthSpending.toFixed(2)}
+                ${(currentMonthSpending || 0).toFixed(2)}
               </h3>
             </div>
             {/* Total Year Spending */}
             <div className="bg-muted rounded-lg p-4">
               <p className="text-sm text-muted-foreground">Total this year</p>
               <h3 className="text-2xl font-bold mt-1">
-                ${totalSpent.toFixed(2)}
+                ${(totalSpent || 0).toFixed(2)}
               </h3>
             </div>
           </div>
@@ -90,7 +99,7 @@ export const Expenses = ({
                 <Tooltip
                   formatter={(value) => {
                     const num = typeof value === "number" ? value : parseFloat(value as string);
-                    return [`$${num.toFixed(2)}`, "Amount"];
+                    return [`$${(num || 0).toFixed(2)}`, "Amount"];
                   }}
                   labelFormatter={() => "Spending"}
                 />

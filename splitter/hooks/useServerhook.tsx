@@ -1,7 +1,7 @@
 "use client"
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 const useServerhook = <T,>(url:string,method:RequestMethod="GET",body?:Record<string, any>|undefined) => {
@@ -26,7 +26,7 @@ const useServerhook = <T,>(url:string,method:RequestMethod="GET",body?:Record<st
           setError(null);
         } catch (error) {
           setError(error as Error);
-          toast.error((error as Error).message);
+          //toast.error((error as Error).message);
         } finally {
           setIsLoading(false);
         }

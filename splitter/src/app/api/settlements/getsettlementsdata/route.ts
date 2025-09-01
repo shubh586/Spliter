@@ -7,6 +7,12 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     try {
         const body: settlementsType = await req.json();
+                if (!body) {
+                  return NextResponse.json(
+                    { error: "settlements types required" },
+                    { status: 400 }
+                  );
+                }
         const searchedContacts = await getSettlementData(body);
         return NextResponse.json(searchedContacts); 
     } catch (err) {

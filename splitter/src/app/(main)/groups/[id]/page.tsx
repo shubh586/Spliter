@@ -13,19 +13,23 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Expense from "@/components/Expense";
 import Link from "next/link";
 import Settlements from "@/components/Settlements";
+
 const Page = () => {
   const [activeTab, setActiveTab] = useState<string>("expenses");
   const params = useParams();
   const { currentUser, isLoading: getingUser } = useCurrentUser();
 
+
+
   // const router = useRouter();
-  const { data, isLoading } = useServerhook<GroupExpenseData>(
+  const { data, isLoading, error } = useServerhook<GroupExpenseData>(
     "/api/group/getallgroupexpenses",
     "POST",
     {
       groupId: params.id,
     }
   );
+
 
   if (getingUser) {
     return (
@@ -51,7 +55,24 @@ const Page = () => {
   if (!data) {
     return (
       <div className="container mx-auto py-12">
-        <p>No data found</p>
+        <div className="text-center space-y-4">
+          <p className="text-lg">Loading group data...</p>
+          {error && (
+            <div className="text-red-500">
+              <p>Error loading group: {error.toString()}</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                This might happen if the group was recently updated. Please refresh the page.
+              </p>
+            </div>
+          )}
+          <Button 
+            onClick={() => window.location.reload()} 
+            variant="outline"
+            className="mt-4"
+          >
+            Refresh Page
+          </Button>
+        </div>
       </div>
     );
   }
@@ -83,7 +104,7 @@ const Page = () => {
             </div>
             <div>
               <p className=" gradient-title text-4xl">Shubham</p>
-              <p className="text-muted-foreground ">2 members</p>
+              <p className="text-muted-foreground ">{members.length} members</p>
             </div>
           </div>
         </div>

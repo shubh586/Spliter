@@ -32,6 +32,12 @@ type group = {
 export async function POST(req: Request) {
   try {
     const data: Group = await req.json();
+            if (!data) {
+              return NextResponse.json(
+                { error: "group data is required" },
+                { status: 400 }
+              );
+            }
     const group: group = await createGroup(data);
     return NextResponse.json(group, { status: 200 });
   } catch (err) {

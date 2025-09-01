@@ -50,7 +50,9 @@ const Expenses = () => {
                 <ExpensesForm
                   type={"group"}
                   currentUser={currentUser}
-                  onSuccess={async(id:string|undefined) => await router.push(`/group/${id}`)}
+                  onSuccess={async(id:string|undefined) => {
+                    await router.push(`/groups/${id}`);
+                  }}
                 />
               </TabsContent>
             </Tabs>

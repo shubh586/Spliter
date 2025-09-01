@@ -139,7 +139,7 @@ export function ParticipantSelector({
                   <CommandEmpty>
                     {searchQuery.length < 3 ? (
                       <p className="py-3 px-4 text-sm text-center text-muted-foreground">
-                        Type at least 3 characters to search
+                        Type at least 2 characters to search
                       </p>
                     ) : isLoading ? (
                       <p className="py-3 px-4 text-sm text-center text-muted-foreground">

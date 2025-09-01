@@ -5,6 +5,12 @@ export async function POST(req: Request) {
   try {
     const body: { userId: string } = await req.json();
     // console.log("Total Spending API called with userId:", body.userId);
+            if (!body.userId) {
+              return NextResponse.json(
+                { error: "User ID is required" },
+                { status: 400 }
+              );
+            }
     
     const totalExpenses = await getTotalSpent(body.userId);
     // console.log("Total Spending API returned:", totalExpenses);

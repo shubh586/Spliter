@@ -5,6 +5,12 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body: { userId: string } = await req.json();
+            if (!body.userId) {
+              return NextResponse.json(
+                { error: "User ID is required" },
+                { status: 400 }
+              );
+            }
     const userGroups: getUserGroupList = await getUserGroups(body.userId);
     return NextResponse.json(userGroups);
   } catch (err) {
