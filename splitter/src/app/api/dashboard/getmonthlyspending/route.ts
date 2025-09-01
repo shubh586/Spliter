@@ -10,10 +10,16 @@ export async function POST(req: Request) {
             { status: 400 }
           );
         }
-    // console.log("Monthly Spending API called with userId:", body.userId);
+    console.log("Monthly Spending API called with userId:", body.userId);
     
     const monthlyExpenses = await getMonthlySpending(body.userId);
-    // console.log("Monthly Spending API returned:", monthlyExpenses);
+    console.log("Monthly Spending API returned:", {
+      data: monthlyExpenses,
+      type: typeof monthlyExpenses,
+      isArray: Array.isArray(monthlyExpenses),
+      length: monthlyExpenses?.length,
+      sampleData: monthlyExpenses?.[0]
+    });
     
     return NextResponse.json(monthlyExpenses);
   } catch (err) {

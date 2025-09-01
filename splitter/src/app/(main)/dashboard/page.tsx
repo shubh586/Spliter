@@ -50,6 +50,16 @@ const Dashboard = () => {
       }
     );
 
+  // Debug logging for monthly spending
+  console.log("Dashboard monthly spending data:", {
+    monthlySpending,
+    isLoading: monthlySpendingLoading,
+    currentUserId: currentUser?.id,
+    dataType: typeof monthlySpending,
+    isArray: Array.isArray(monthlySpending),
+    length: monthlySpending?.length
+  });
+
   // console.log("Dashboard Data:", {
   //   currentUser: currentUser?.id,
   //   totalSpent,

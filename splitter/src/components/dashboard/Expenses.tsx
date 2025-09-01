@@ -40,22 +40,53 @@ export const Expenses = ({
     "Dec",
   ];
 
+  // Production-safe debugging
+  if (typeof window !== 'undefined') {
+    console.log("Expenses component received:", {
+      monthlySpending,
+      totalSpent,
+      monthlySpendingType: typeof monthlySpending,
+      isArray: Array.isArray(monthlySpending),
+      monthlySpendingLength: monthlySpending?.length
+    });
+  }
+
   // Create a complete year array with all months
   const currentYear = new Date().getFullYear();
   const completeYearData = Array.from({ length: 12 }, (_, index) => {
     const monthStart = new Date(currentYear, index, 1).getTime();
     const monthData = monthlySpending?.find(item => item.month === monthStart);
+    
+    // Production-safe debugging
+    if (typeof window !== 'undefined') {
+      console.log(`Month ${index} (${monthNames[index]}):`, {
+        monthStart,
+        monthData,
+        amount: monthData?.total || 0
+      });
+    }
+    
     return {
       name: monthNames[index],
-      amount: monthData?.total || 0,
+      amount: Number(monthData?.total || 0), // Ensure it's a number
       month: index,
     };
   });
 
+  if (typeof window !== 'undefined') {
+    console.log("Complete year data:", completeYearData);
+  }
 
   const currentMonth = new Date().getMonth();
   const currentMonthSpending = completeYearData[currentMonth]?.amount || 0;
 
+  if (typeof window !== 'undefined') {
+    console.log("Current month spending:", {
+      currentMonth,
+      currentMonthSpending,
+      monthName: monthNames[currentMonth]
+    });
+  }
 
   if (!Array.isArray(monthlySpending)) {
     console.warn("monthlySpending is not an array:", monthlySpending);
@@ -103,7 +134,11 @@ export const Expenses = ({
                   }}
                   labelFormatter={() => "Spending"}
                 />
-                <Bar dataKey="amount" fill="#36d7b7" radius={[4, 4, 0, 0]} />
+                <Bar 
+                  dataKey="amount" 
+                  fill="#36d7b7" 
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>

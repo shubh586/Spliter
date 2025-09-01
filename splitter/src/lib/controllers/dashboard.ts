@@ -126,7 +126,7 @@ export async function getMonthlySpending(
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1);
 
-  //console.log("getMonthlySpending called for userId:", userId, "from year:", startOfYear);
+  console.log("getMonthlySpending called for userId:", userId, "from year:", startOfYear);
 
   const expenses = await prisma.expenses.findMany({
     where: {
@@ -138,7 +138,7 @@ export async function getMonthlySpending(
     include: { splits: true },
   });
   
-  //console.log("Found expenses for monthly spending:", expenses.length, "for user:", userId);
+  console.log("Found expenses for monthly spending:", expenses.length, "for user:", userId);
   
   // Initialize monthly totals with timestamps
   const monthlyTotals: Record<number, number> = {};
@@ -147,6 +147,8 @@ export async function getMonthlySpending(
     const monthStart = new Date(currentYear, i, 1).getTime();
     monthlyTotals[monthStart] = 0;
   }
+
+  console.log("Initialized monthly totals:", monthlyTotals);
 
   for (const expense of expenses) {
     const date = new Date(expense.date);
@@ -158,7 +160,7 @@ export async function getMonthlySpending(
     const mySplit = expense.splits.find((s) => s.userId === userId);
     if (mySplit) {
       monthlyTotals[monthStart] += mySplit.amount;
-     // console.log("Added to month", new Date(monthStart).toLocaleDateString(), "amount:", mySplit.amount, "from expense:", expense.description);
+      console.log("Added to month", new Date(monthStart).toLocaleDateString(), "amount:", mySplit.amount, "from expense:", expense.description);
     }
   }
 
@@ -169,7 +171,7 @@ export async function getMonthlySpending(
     }))
     .sort((a, b) => a.month - b.month);
 
-  //console.log("Monthly spending result:", result);
+  console.log("Monthly spending result:", result);
   return result;
 }
 
