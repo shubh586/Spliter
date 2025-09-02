@@ -90,7 +90,7 @@ const Page = () => {
         <Button type="button" variant="outline" asChild>
           <Link href="/contacts">
             <ArrowLeft className="h-4 w-4" />
-            Back Option
+            Back
           </Link>
         </Button>
       </div>
