@@ -54,7 +54,7 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="flex items-center justify-center gap-8 pt-8 text-sm text-gray-600">
+          {/* <div className="flex items-center justify-center gap-8 pt-8 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
@@ -64,13 +64,13 @@ export default function LandingPage() {
                   />
                 ))}
               </div>
-              {/* <span className="font-semibold">500+ happy users</span> */}
+              <span className="font-semibold">500+ happy users</span>
             </div>
-            <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
-            {/* <span className="font-semibold">✨ Free forever</span> */}
-            <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
-            {/* <span className="font-semibold">🇮🇳 Made in India</span> */}
-          </div>
+            <div className="hidden sm:block w-px h-4 bg-gray-300"></div> 
+            <span className="font-semibold">✨ Free forever</span> 
+            <div className="hidden sm:block w-px h-4 bg-gray-300"></div> 
+            <span className="font-semibold">🇮🇳 Made in India</span>
+          </div> */}
         </div>
       </section>
 

@@ -40,51 +40,60 @@ export const Expenses = ({
     "Dec",
   ];
 
-  // Production-safe debugging
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     console.log("Expenses component received:", {
       monthlySpending,
       totalSpent,
       monthlySpendingType: typeof monthlySpending,
       isArray: Array.isArray(monthlySpending),
-      monthlySpendingLength: monthlySpending?.length
+      monthlySpendingLength: monthlySpending?.length,
     });
   }
 
   // Create a complete year array with all months
+  // const currentYear = new Date().getFullYear();
+  // const completeYearData = Array.from({ length: 12 }, (_, index) => {
+
+  //   const monthData = monthlySpending.find((item) => {
+  //     const date = new Date(item.month);
+  //     return date.getFullYear() == currentYear && date.getMonth() == index;
+  //   })
+  //   return {
+  //     name: monthNames[index],
+  //     amount: Number(monthData?.total || 0),
+  //     month: index,
+  //   };
+  // });
+
+  // realise that mapping is more redable than this so lets booooooooooom
   const currentYear = new Date().getFullYear();
-  const completeYearData = Array.from({ length: 12 }, (_, index) => {
-    const monthStart = new Date(currentYear, index, 1).getTime();
-    const monthData = monthlySpending?.find(item => item.month === monthStart);
-    
-    // Production-safe debugging
-    if (typeof window !== 'undefined') {
-      console.log(`Month ${index} (${monthNames[index]}):`, {
-        monthStart,
-        monthData,
-        amount: monthData?.total || 0
-      });
-    }
-    
+  const completeYearData = monthNames.map((name, index) => {
+    const monthData = monthlySpending.find((item) => {
+      const date = new Date(item.month);
+      return date.getFullYear() == currentYear && date.getMonth() == index;
+    });
+
     return {
-      name: monthNames[index],
-      amount: Number(monthData?.total || 0), // Ensure it's a number
-      month: index,
+      name, 
+      amount: Number(monthData?.total || 0),
+      month: index, 
     };
   });
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     console.log("Complete year data:", completeYearData);
   }
 
   const currentMonth = new Date().getMonth();
-  const currentMonthSpending = completeYearData[currentMonth]?.amount || 0;
+  const currentMonthSpending = Number(
+    completeYearData[currentMonth]?.amount || 0
+  );
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     console.log("Current month spending:", {
       currentMonth,
       currentMonthSpending,
-      monthName: monthNames[currentMonth]
+      monthName: monthNames[currentMonth],
     });
   }
 
@@ -119,7 +128,7 @@ export const Expenses = ({
               </h3>
             </div>
           </div>
-          
+
           {/* Spending Chart */}
           <div className="h-64 mt-6">
             <ResponsiveContainer width="100%" height="100%">
@@ -129,16 +138,15 @@ export const Expenses = ({
                 <YAxis />
                 <Tooltip
                   formatter={(value) => {
-                    const num = typeof value === "number" ? value : parseFloat(value as string);
+                    const num =
+                      typeof value === "number"
+                        ? value
+                        : parseFloat(value as string);
                     return [`$${(num || 0).toFixed(2)}`, "Amount"];
                   }}
                   labelFormatter={() => "Spending"}
                 />
-                <Bar 
-                  dataKey="amount" 
-                  fill="#36d7b7" 
-                  radius={[4, 4, 0, 0]}
-                />
+                <Bar dataKey="amount" fill="#36d7b7" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
